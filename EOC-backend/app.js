@@ -6,8 +6,10 @@ import cors from 'cors';
 import connectDB from './database/mongodb.js';
 
 import authRoutes from './routes/auth.js'
+import eventRoutes from './routes/event.js';
 
 import errorMiddleware from './middlewares/error.js';
+
 
 
 const app = express()
@@ -27,6 +29,9 @@ app.get('/',(req,res)=>{
 
 
 app.use('/api/v1/auth',authRoutes)
+app.use('/api/v1/events',eventRoutes)
+
+
 
 app.use(errorMiddleware);
 

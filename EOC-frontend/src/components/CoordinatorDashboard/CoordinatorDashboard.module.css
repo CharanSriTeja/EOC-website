@@ -1,0 +1,736 @@
+:root {
+  --color-primary: #667eea;
+  --color-primary-dark: #5a67d8;
+  --color-secondary: #f7fafc;
+  --color-text-primary: #2d3748;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #718096;
+  --color-blue: #4299e1;
+  --color-green: #48bb78;
+  --color-purple: #9f7aea;
+  --color-orange: #ed8936;
+  --color-error: #e53e3e;
+  --color-error-dark: #c53030;
+}
+
+/* Sidebar Styles */
+
+.sidebar {
+  width: 250px;
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  padding: 2rem 0;
+  color: white;
+  transition: left 0.3s ease;
+}
+
+.sidebarOpen {
+  left: 0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.sidebarHeader {
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.sidebarTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebarButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease;
+  text-align: left;
+}
+
+.sidebarButton span {
+  font-weight: 500;
+}
+
+.sidebarButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.active {
+  background: rgba(255, 255, 255, 0.2);
+  border-right: 4px solid white;
+  font-weight: 600;
+}
+
+/* CoordinatorDashboard styles */
+
+.dashboardContainer {
+  display: flex;
+  background-color: var(--color-secondary);
+  min-height: 100vh;
+  color: var(--color-text-primary);
+}
+
+.menuButton {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  border-radius: 4px;
+  z-index: 1200;
+}
+
+.mainContent {
+  margin-left: 250px;
+  padding: 2rem;
+  flex: 1;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebarActive {
+  margin-left: 0;
+}
+
+/* Dashboard View */
+
+.viewContainer {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.headerTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background-color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 8px rgba(98, 102, 135, 0.1);
+}
+
+.statIconWrapper {
+  padding: 0.75rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.35rem;
+}
+
+.statValue {
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.todayEventsCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.todayEventItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-text-muted);
+}
+
+.todayEventTitle {
+  font-weight: 600;
+}
+
+.todayEventVenue {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.statusBadge {
+  padding: 0.15rem 0.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.75rem;
+  border-radius: 12px;
+  color: white;
+}
+
+.statusUpcoming {
+  background-color: var(--color-green);
+}
+
+.statusOngoing {
+  background-color: var(--color-blue);
+}
+
+.statusCompleted {
+  background-color: var(--color-purple);
+}
+
+/* Events View */
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.button {
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.buttonPrimary {
+  background-color: var(--color-primary);
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.buttonPrimary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.buttonSecondary {
+  background-color: #e2e8f0;
+  color: var(--color-text-primary);
+  transition: background-color 0.3s;
+}
+
+.buttonSecondary:hover {
+  background-color: #cbd5e0;
+}
+
+.buttonIcon {
+  padding: 0.35rem;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.buttonEdit {
+  color: var(--color-blue);
+}
+
+.buttonDelete {
+  color: var(--color-error);
+}
+
+.buttonView {
+  background-color: #667eea33;
+  color: var(--color-primary);
+  border-radius: 5px;
+  padding: 0.3rem 0.7rem;
+}
+
+.buttonFilter {
+  background-color: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  border-radius: 5px;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.active {
+  background-color: var(--color-primary);
+  color: white !important;
+}
+
+.filtersContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.searchWrapper {
+  flex-grow: 1;
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 28px;
+  border-radius: 6px;
+  border: 1px solid var(--color-text-muted);
+  outline: none;
+  font-size: 1rem;
+  color: var(--color-text-primary);
+}
+
+.eventGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+}
+
+.eventCard {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 10px 20px rgba(98, 102, 135, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 100%;
+}
+
+.eventCardImage {
+  height: 230px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px 12px 0 0;
+  position: relative;
+}
+
+.eventCardContent {
+  padding: 0.8rem 0 0 0;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.statusBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 8px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  border-radius: 12px;
+  color: white;
+}
+
+.eventCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.eventCardTitle {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-text-primary);
+}
+
+.eventCardCategory {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 15px;
+  background: #f3f3f3;
+  color: var(--color-text-muted);
+  text-transform: capitalize;
+}
+
+.eventCardDescription {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  flex-grow: 1;
+  margin-bottom: 1rem;
+}
+
+.eventCardMeta {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  align-items: center;
+}
+
+.eventCardMetaItem {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.eventCardVenue {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  color: var(--color-text-primary);
+}
+
+.eventCardActions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Modal styles */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(18, 23, 39, 0.8);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1300;
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 15px;
+  padding: 1.5rem 2rem;
+  min-width: 350px;
+  max-width: 550px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.buttonClose {
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.modalBody {
+  font-size: 1rem;
+  color: var(--color-text-primary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.label {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.input,
+.textarea {
+  border-radius: 6px;
+  border: 1px solid var(--color-text-muted);
+  padding: 10px 14px;
+  font-size: 1rem;
+  outline: none;
+  color: var(--color-text-primary);
+  background-color: white;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 70px;
+  font-family: inherit;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  gap: 10px;
+}
+
+.button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.buttonPrimary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.buttonPrimary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.buttonSecondary {
+  background-color: #e2e8f0;
+  color: var(--color-text-primary);
+}
+
+.buttonSecondary:hover {
+  background-color: #cbd5e0;
+}
+
+.buttonDelete {
+  background-color: var(--color-error);
+  color: white;
+}
+
+.buttonDelete:hover {
+  background-color: var(--color-error-dark);
+}
+
+.buttonGreen {
+  background-color: #48bb78;
+  color: white;
+}
+
+.buttonGreen:hover {
+  background-color: #2f855a;
+}
+
+.buttonIcon {
+  padding: 0.3rem 0.5rem;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.textMuted {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.todayEventItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-text-muted);
+}
+
+.todayEventTitle {
+  font-weight: 600;
+}
+
+.todayEventVenue {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* Participants styles */
+
+.participantHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.participantCount {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+}
+
+.participantList {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.participantItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--color-text-muted);
+}
+
+.participantInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.participantName {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.participantEmail {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.participantDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.participantDetailItem {
+  padding: 3px 7px;
+  background-color: #f3f4f6;
+  border-radius: 99px;
+}
+
+/* No events */
+
+.noEvents {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.profileCard {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 600px;
+  margin-top: 2rem;
+  box-shadow: 0 10px 20px rgba(98, 102, 135, 0.1);
+}
+
+.profileCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profileInfoItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+.profileInfoLabel {
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.profileInfoValue {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.input,
+.textarea {
+  font-size: 1rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-text-muted);
+  outline: none;
+  transition: border-color 0.2s ease;
+  color: var(--color-text-primary);
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.textarea {
+  min-height: 70px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+

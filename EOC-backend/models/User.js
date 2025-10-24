@@ -27,6 +27,7 @@ const UserSchema = new mongoose.Schema({
     enum: ['student', 'coordinator'],
     required: true,
   },
+  registeredEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }]
 }, { timestamps: true }); 
 
 export default mongoose.model('User', UserSchema);

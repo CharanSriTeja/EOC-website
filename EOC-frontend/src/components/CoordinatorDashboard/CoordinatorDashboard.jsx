@@ -51,22 +51,37 @@ const CoordinatorDashboard = () => {
     fetchEvents();
   }, []);
 
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarOpen && window.innerWidth < 1024) {
+        const sidebar = document.querySelector(`.${styles.sidebar}`);
+        const menuButton = document.querySelector(`.${styles.menuButton}`);
+        
+        if (sidebar && !sidebar.contains(event.target) && menuButton && !menuButton.contains(event.target)) {
+          setSidebarOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [sidebarOpen]);
+
   const getCurrentDate = () => new Date().toISOString().split('T')[0];
 
   const getEventStatus = (eventDate) => {
-  // Extract just the date part (YYYY-MM-DD) from both
-  const today = new Date().toISOString().split('T')[0];
-  const eventDateOnly = new Date(eventDate).toISOString().split('T')[0];
-  
-  if (eventDateOnly === today) {
-    return 'ongoing';
-  } else if (eventDateOnly > today) {
-    return 'upcoming';
-  } else {
-    return 'completed';
-  }
-};
-
+    const today = new Date().toISOString().split('T')[0];
+    const eventDateOnly = new Date(eventDate).toISOString().split('T')[0];
+    
+    if (eventDateOnly === today) {
+      return 'ongoing';
+    } else if (eventDateOnly > today) {
+      return 'upcoming';
+    } else {
+      return 'completed';
+    }
+  };
 
   const categorizedEvents = events.reduce((acc, event) => {
     const status = getEventStatus(event.date);
@@ -138,17 +153,15 @@ const CoordinatorDashboard = () => {
       category: eventForm.category,
       image: eventForm.image,
       details: {
-        venue: eventForm.venue  // Nest venue inside details
+        venue: eventForm.venue
       }
     };
-    console.log('Trying to add');
+    
     try {
       const response = await axiosInstance.post('/events', eventData);
-      console.log('Trying to add');
       if (response.data.success) {
         setEvents([response.data.data, ...events]);
         closeModal();
-        console.log('Added event: ',response.data.data);
       }
     } catch (error) {
       console.error('Error adding event:', error);
@@ -163,9 +176,10 @@ const CoordinatorDashboard = () => {
       category: eventForm.category,
       image: eventForm.image,
       details: {
-        venue: eventForm.venue  // Nest venue inside details
+        venue: eventForm.venue
       }
     };
+    
     try {
       const response = await axiosInstance.patch(`/events/${selectedEvent._id}`, eventData);
       if (response.data.success) {
@@ -178,30 +192,27 @@ const CoordinatorDashboard = () => {
   };
 
   const handleDeleteClick = (id) => {
-    console.log('Delete clicked for ID:', id); 
     setDeletingEventId(id);
     setShowConfirm(true);
   };
 
   const confirmDelete = async () => {
-  try {
-    const response = await axiosInstance.delete(`/events/${deletingEventId}`);
-    console.log('Delete response:', response.data); // Add this
-    
-    if (response.data.success) { // Check success flag
-      setEvents(events.filter(event => event._id !== deletingEventId));
-      setShowConfirm(false);
-      setDeletingEventId(null);
-    } else {
-      console.error('Delete failed:', response.data.message);
-      alert('Failed to delete event');
+    try {
+      const response = await axiosInstance.delete(`/events/${deletingEventId}`);
+      
+      if (response.data.success) {
+        setEvents(events.filter(event => event._id !== deletingEventId));
+        setShowConfirm(false);
+        setDeletingEventId(null);
+      } else {
+        console.error('Delete failed:', response.data.message);
+        alert('Failed to delete event');
+      }
+    } catch (error) {
+      console.error('Error deleting event:', error.response?.data || error.message);
+      alert('Error deleting event: ' + (error.response?.data?.message || error.message));
     }
-  } catch (error) {
-    console.error('Error deleting event:', error.response?.data || error.message);
-    alert('Error deleting event: ' + (error.response?.data?.message || error.message));
-  }
-};
-
+  };
 
   const cancelDelete = () => {
     setDeletingEventId(null);
@@ -213,22 +224,80 @@ const CoordinatorDashboard = () => {
     setProfile(prev => ({ ...prev, [name]: value }));
   };
 
+  // Toggle sidebar handler
+  const toggleSidebar = () => {
+    console.log('Toggle sidebar clicked, current state:', sidebarOpen);
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
     <div className={styles.dashboardContainer}>
-      <Sidebar currentView={currentView} setCurrentView={setCurrentView} filter={filter} setFilter={setFilter} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <Sidebar 
+        currentView={currentView} 
+        setCurrentView={setCurrentView} 
+        filter={filter} 
+        setFilter={setFilter} 
+        sidebarOpen={sidebarOpen} 
+        setSidebarOpen={setSidebarOpen} 
+      />
       
-      <button className={`${styles.button} ${styles.buttonIcon} ${styles.menuButton}`} onClick={() => setSidebarOpen(!sidebarOpen)}>
-        {sidebarOpen ? 'Close' : 'Menu'}
+      {/* Menu Toggle Button */}
+      <button 
+        className={styles.menuButton} 
+        onClick={toggleSidebar}
+        type="button"
+      >
+        {sidebarOpen ? '✕ Close' : '☰ Menu'}
       </button>
       
-      <main className={`${styles.mainContent} ${sidebarOpen ? styles.sidebarActive : ''}`}>
-        {currentView === 'dashboard' && <DashboardView events={events} upcoming={upcoming} ongoing={ongoing} completed={completed} totalParticipants={totalParticipants} />}
-        {currentView === 'events' && <EventsView events={filteredEvents()} filter={filter} setFilter={setFilter} searchQuery={searchQuery} setSearchQuery={setSearchQuery} openModal={openModal} handleDeleteClick={handleDeleteClick} getEventStatus={getEventStatus} />}
-        {currentView === 'profile' && <ProfileView profile={profile} editingProfile={editingProfile} setEditingProfile={setEditingProfile} handleProfileChange={handleProfileChange} />}
+      <main className={styles.mainContent}>
+        {currentView === 'dashboard' && (
+          <DashboardView 
+            events={events} 
+            upcoming={upcoming} 
+            ongoing={ongoing} 
+            completed={completed} 
+            totalParticipants={totalParticipants} 
+          />
+        )}
+        {currentView === 'events' && (
+          <EventsView 
+            events={filteredEvents()} 
+            filter={filter} 
+            setFilter={setFilter} 
+            searchQuery={searchQuery} 
+            setSearchQuery={setSearchQuery} 
+            openModal={openModal} 
+            handleDeleteClick={handleDeleteClick} 
+            getEventStatus={getEventStatus} 
+          />
+        )}
+        {currentView === 'profile' && (
+          <ProfileView 
+            profile={profile} 
+            editingProfile={editingProfile} 
+            setEditingProfile={setEditingProfile} 
+            handleProfileChange={handleProfileChange} 
+          />
+        )}
       </main>
 
-      <Modal showModal={showModal} closeModal={closeModal} modalType={modalType} eventForm={eventForm} handleFormChange={handleFormChange} handleAddEvent={handleAddEvent} handleEditEvent={handleEditEvent} selectedEvent={selectedEvent} />
-      <ConfirmModal showConfirm={showConfirm} confirmDelete={confirmDelete} cancelDelete={cancelDelete} />
+      <Modal 
+        showModal={showModal} 
+        closeModal={closeModal} 
+        modalType={modalType} 
+        eventForm={eventForm} 
+        handleFormChange={handleFormChange} 
+        handleAddEvent={handleAddEvent} 
+        handleEditEvent={handleEditEvent} 
+        selectedEvent={selectedEvent} 
+      />
+      
+      <ConfirmModal 
+        showConfirm={showConfirm} 
+        confirmDelete={confirmDelete} 
+        cancelDelete={cancelDelete} 
+      />
     </div>
   );
 };

@@ -1,0 +1,202 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 0.5rem;
+  max-width: 42rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalHeader {
+  height: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 1rem;
+}
+
+.modalHeader.technical {
+  background: linear-gradient(to bottom right, #3b82f6, #2563eb);
+}
+
+.modalHeader.cultural {
+  background: linear-gradient(to bottom right, #a855f7, #9333ea);
+}
+
+.modalHeader.sports {
+  background: linear-gradient(to bottom right, #10b981, #059669);
+}
+
+.modalHeader.workshop {
+  background: linear-gradient(to bottom right, #f97316, #ea580c);
+}
+
+.modalHeader.career {
+  background: linear-gradient(to bottom right, #ec4899, #db2777);
+}
+
+.modalTitle {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.modalBody {
+  padding: 1.5rem;
+}
+
+.badges {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.technicalBadge {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.culturalBadge {
+  background-color: #f3e8ff;
+  color: #7e22ce;
+}
+
+.sportsBadge {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.workshopBadge {
+  background-color: #ffedd5;
+  color: #9a3412;
+}
+
+.careerBadge {
+  background-color: #fce7f3;
+  color: #9f1239;
+}
+
+.completedBadge {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.description {
+  color: #374151;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .detailsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.detailItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.icon {
+  color: #4f46e5;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.detailLabel {
+  font-weight: 500;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.detailValue {
+  color: #4b5563;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.organizer {
+  margin-bottom: 1.5rem;
+}
+
+.organizerValue {
+  color: #4b5563;
+  margin: 0.5rem 0 0 0;
+}
+
+.registerButton {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  background-color: #4f46e5;
+  color: white;
+}
+
+.registerButton:hover {
+  background-color: #4338ca;
+}
+
+.registerButton.registered {
+  background-color: #d1fae5;
+  color: #065f46;
+  cursor: not-allowed;
+}
+
+.registerButton.disabled {
+  background-color: #e5e7eb;
+  color: #6b7280;
+  cursor: not-allowed;
+}

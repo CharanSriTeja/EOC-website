@@ -14,11 +14,14 @@ const Sidebar = ({ currentView, setCurrentView, filter, setFilter, sidebarOpen, 
     setCurrentView(view);
     if (view === 'completed') {
       setFilter('completed');
-      setCurrentView('events'); // to show completed events under events view
+      setCurrentView('events');
     } else {
       setFilter('all');
     }
-    setSidebarOpen(false);
+    // Close sidebar on mobile after navigation
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false);
+    }
   };
 
   return (
@@ -31,7 +34,8 @@ const Sidebar = ({ currentView, setCurrentView, filter, setFilter, sidebarOpen, 
           <button
             key={item.view}
             className={`${styles.sidebarButton} ${currentView === item.view ? styles.active : ''}`}
-            onClick={() => handleNavClick(item.view)}>
+            onClick={() => handleNavClick(item.view)}
+          >
             {item.icon}
             <span>{item.label}</span>
           </button>

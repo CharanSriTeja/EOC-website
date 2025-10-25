@@ -140,6 +140,85 @@ a:hover {
 /* ==========================
    SIDEBAR STYLES
    ========================== */
+   /* Sidebar Footer */
+.sidebarFooter {
+  margin-top: auto;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(var(--color-brown-600-rgb), 0.15);
+  background: linear-gradient(135deg, rgba(7, 128, 128, 0.02) 0%, transparent 100%);
+}
+
+.logoutButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: linear-gradient(135deg, #f45d48 0%, #e04a36 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(244, 93, 72, 0.3);
+  font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+.logoutButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(244, 93, 72, 0.4);
+  background: linear-gradient(135deg, #e04a36 0%, #c83d2a 100%);
+}
+
+.logoutButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(244, 93, 72, 0.25);
+}
+
+.logoutButton svg {
+  transition: transform 0.3s ease;
+}
+
+.logoutButton:hover svg {
+  transform: translateX(-2px);
+}
+
+/* Make sure sidebar has flex column layout */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 16rem;
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+/* Sidebar navigation should take remaining space */
+.sidebarNav {
+  flex: 1;
+  padding: 1rem 0;
+  overflow-y: auto;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .sidebarFooter {
+    border-top: 1px solid rgba(var(--color-gray-400-rgb), 0.2);
+  }
+}
+
+[data-color-scheme="dark"] .sidebarFooter {
+  border-top: 1px solid rgba(var(--color-gray-400-rgb), 0.2);
+}
+
 
 .sidebar {
   width: 260px;

@@ -1,0 +1,184 @@
+/* ---------------- Certificates Container ---------------- */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-family: 'Inter', 'Poppins', sans-serif;
+  background-color: #f8f5f2;
+  padding: 1rem;
+}
+
+/* ---------------- Header Section ---------------- */
+.header {
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #232323;
+  margin: 0 0 0.25rem 0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #222525;
+  margin: 0;
+}
+
+/* ---------------- Certificates Grid ---------------- */
+.certificatesGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .certificatesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .certificatesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ---------------- Certificate Card ---------------- */
+.certificateCard {
+  background-color: #fffffe;
+  border-radius: 14px;
+  border: 1px solid rgba(35, 35, 35, 0.08);
+  box-shadow: 0 2px 8px rgba(35, 35, 35, 0.05);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.certificateCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(7, 128, 128, 0.15);
+  border-color: rgba(7, 128, 128, 0.2);
+}
+
+/* ---------------- Certificate Header ---------------- */
+.certificateHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
+  padding: 1rem;
+}
+
+.certificateIcon {
+  color: #fffffe;
+}
+
+/* ---------------- Certificate Body ---------------- */
+.certificateBody {
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.certificateName {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #232323;
+  margin: 0 0 0.25rem 0;
+}
+
+.certificateAchievement {
+  font-size: 0.875rem;
+  color: #222525;
+  margin: 0 0 0.5rem 0;
+}
+
+.certificateDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.825rem;
+  color: #222525;
+}
+
+.detailItem svg {
+  color: #078080;
+}
+
+/* ---------------- Category Badge ---------------- */
+.categoryBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
+  color: #fffffe;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ---------------- Download Button ---------------- */
+.downloadButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
+  color: #fffffe;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(7, 128, 128, 0.25);
+}
+
+.downloadButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(7, 128, 128, 0.35);
+}
+
+.downloadButton:active {
+  transform: translateY(0);
+}
+
+/* ---------------- Empty State ---------------- */
+.emptyState {
+  background: linear-gradient(135deg, #fffffe 0%, #f8f5f2 100%);
+  border-radius: 14px;
+  padding: 4rem 2rem;
+  text-align: center;
+  border: 2px dashed rgba(7, 128, 128, 0.2);
+}
+
+.emptyIcon {
+  color: #078080;
+  opacity: 0.4;
+  margin: 0 auto 1.5rem;
+}
+
+.emptyTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #232323;
+  margin: 0 0 0.5rem 0;
+}
+
+.emptyText {
+  font-size: 1rem;
+  color: #222525;
+  margin: 0;
+}

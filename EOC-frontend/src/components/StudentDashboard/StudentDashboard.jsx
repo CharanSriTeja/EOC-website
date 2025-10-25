@@ -149,7 +149,7 @@ const StudentDashboard = () => {
     if (loading) {
       return (
         <div style={{ textAlign: 'center', padding: '2rem' }}>
-          Loading...
+            <div className="spinner"></div>
         </div>
       );
     }
@@ -219,7 +219,9 @@ const StudentDashboard = () => {
           alignItems: 'center', 
           height: '100vh' 
         }}>
-          Loading...
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div className="spinner"></div>
+        </div>
         </div>
       </div>
     );

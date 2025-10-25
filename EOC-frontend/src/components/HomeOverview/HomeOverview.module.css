@@ -1,25 +1,33 @@
+/* 🌿 HomeOverview.module.css */
+
 .container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
+  font-family: 'Inter', 'Poppins', sans-serif;
 }
 
+/* ---------- Welcome Section ---------- */
 .welcomeSection {
   margin-bottom: 0.5rem;
 }
 
 .welcomeTitle {
-  font-size: 1.875rem;
-  font-weight: bold;
-  color: #111827;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #232323;
   margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
 }
 
 .welcomeText {
-  color: #4b5563;
+  color: #222525;
   margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
+/* ---------- Stats Section ---------- */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -33,39 +41,47 @@
 }
 
 .statCard {
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-  color: white;
+  border-radius: 14px;
+  padding: 1.75rem;
+  color: #fffffe;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(7, 128, 128, 0.15);
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(7, 128, 128, 0.2);
 }
 
 .blueCard {
-  background: linear-gradient(to bottom right, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
 }
 
 .greenCard {
-  background: linear-gradient(to bottom right, #10b981, #059669);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 }
 
 .purpleCard {
-  background: linear-gradient(to bottom right, #a855f7, #9333ea);
-}
-
-.statIcon {
-  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #f45d48 0%, #e04a36 100%);
 }
 
 .statLabel {
   font-size: 0.875rem;
   opacity: 0.9;
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .statValue {
-  font-size: 1.875rem;
-  font-weight: bold;
+  font-size: 2.25rem;
+  font-weight: 700;
   margin: 0;
 }
 
+/* ---------- Events Section ---------- */
 .eventsSection {
   margin-top: 1rem;
 }
@@ -74,30 +90,35 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .sectionTitle {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #111827;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #232323;
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
 .viewAllButton {
-  color: #4f46e5;
+  color: #078080;
   background: none;
   border: none;
   cursor: pointer;
   font-size: 0.875rem;
-  font-weight: 500;
-  transition: color 0.2s;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
 }
 
 .viewAllButton:hover {
-  color: #4338ca;
+  background-color: rgba(7, 128, 128, 0.08);
+  color: #056b6b;
 }
 
+/* Event Cards */
 .eventsGrid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -117,76 +138,127 @@
 }
 
 .eventCard {
-  background-color: white;
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
-  padding: 1rem;
+  background: #fdfcfb;
+  border-radius: 14px;
+  border: 1px solid rgba(35, 35, 35, 0.08);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 12px rgba(7, 128, 128, 0.1);
+  position: relative;
 }
 
+.eventCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 24px rgba(7, 128, 128, 0.15);
+  background-color: #ffffff;
+}
+
+/* Category badge */
+.categoryBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Event Content */
 .eventTitle {
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 0.5rem 0;
-  font-size: 1rem;
+  font-weight: 700;
+  color: #232323;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
 }
 
 .eventDescription {
-  font-size: 0.875rem;
-  color: #4b5563;
-  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  color: #222525;
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.eventTime {
+/* Meta info (date + venue) */
+.eventMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  background-color: #f8f5f2;
+  padding: 0.75rem;
+  border-radius: 10px;
+}
+
+.eventMetaItem {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.75rem;
-  color: #6b7280;
-  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+  color: #222525;
+  font-weight: 500;
 }
 
+.eventMetaItem svg {
+  color: #078080;
+}
+
+/* Button */
 .eventButton {
   width: 100%;
-  padding: 0.5rem 1rem;
-  background-color: #eef2ff;
-  color: #4f46e5;
-  border-radius: 0.5rem;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
+  color: #fffffe;
   border: none;
+  border-radius: 10px;
+  font-weight: 700;
   cursor: pointer;
   font-size: 0.875rem;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(7, 128, 128, 0.25);
 }
 
 .eventButton:hover {
-  background-color: #e0e7ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(7, 128, 128, 0.3);
 }
 
+.eventButton:active {
+  transform: translateY(0);
+}
+
+/* ---------- Empty State ---------- */
 .emptyState {
-  background-color: #f9fafb;
-  border-radius: 0.5rem;
-  padding: 2rem;
+  background: linear-gradient(135deg, #fffffe 0%, #f8f5f2 100%);
+  border-radius: 14px;
+  padding: 3rem 2rem;
   text-align: center;
+  border: 2px dashed rgba(7, 128, 128, 0.2);
 }
 
 .emptyIcon {
-  color: #9ca3af;
-  margin: 0 auto 1rem;
+  color: #078080;
+  opacity: 0.4;
+  margin-bottom: 1rem;
 }
 
 .emptyText {
-  color: #4b5563;
+  color: #222525;
   margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
-.actionsSection {
-  margin-top: 1rem;
-}
-
+/* ---------- Quick Actions ---------- */
 .actionsGrid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -203,34 +275,39 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  padding: 1rem;
+  background: #fdfcfb;
+  border: 1px solid rgba(35, 35, 35, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
   cursor: pointer;
-  transition: all 0.2s;
-  text-align: left;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(35, 35, 35, 0.05);
 }
 
 .actionCard:hover {
-  border-color: #4f46e5;
-  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.1);
+  border-color: #078080;
+  box-shadow: 0 4px 16px rgba(7, 128, 128, 0.12);
+  transform: translateY(-2px);
+  background: #ffffff;
 }
 
 .actionIcon {
-  color: #4f46e5;
-  flex-shrink: 0;
+  color: #078080;
+  padding: 0.75rem;
+  background-color: rgba(7, 128, 128, 0.1);
+  border-radius: 10px;
 }
 
 .actionTitle {
   font-weight: 600;
-  color: #111827;
+  color: #232323;
   margin: 0 0 0.25rem 0;
-  font-size: 0.875rem;
+  font-size: 0.95rem;
 }
 
 .actionText {
-  font-size: 0.75rem;
-  color: #6b7280;
+  font-size: 0.8rem;
+  color: #222525;
   margin: 0;
+  line-height: 1.4;
 }

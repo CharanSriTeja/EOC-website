@@ -3,10 +3,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0F172A;
+  background: linear-gradient(135deg, #f8f5f2 0%, #fffffe 100%);
   padding: 1rem;
   position: relative;
   overflow: hidden;
+  font-family: 'Inter', 'Poppins', sans-serif;
 }
 
 .backgroundBlur {
@@ -17,36 +18,45 @@
 
 .blob1 {
   position: absolute;
-  top: 33.333%;
-  left: 25%;
-  width: 24rem;
-  height: 24rem;
-  background-color: #3B82F6;
-  border-radius: 9999px;
-  filter: blur(96px);
-  opacity: 0.2;
+  top: 20%;
+  left: 10%;
+  width: 28rem;
+  height: 28rem;
+  background: radial-gradient(circle, rgba(7, 128, 128, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: float 8s ease-in-out infinite;
 }
 
 .blob2 {
   position: absolute;
-  bottom: 33.333%;
-  right: 25%;
+  bottom: 20%;
+  right: 10%;
   width: 24rem;
   height: 24rem;
-  background-color: #06B6D4;
-  border-radius: 9999px;
-  filter: blur(96px);
-  opacity: 0.2;
+  background: radial-gradient(circle, rgba(244, 93, 72, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
 }
 
 .formCard {
   max-width: 28rem;
   width: 100%;
-  background-color: #1E293B;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background-color: #fffffe;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 32px rgba(35, 35, 35, 0.1);
+  border: 1px solid rgba(7, 128, 128, 0.1);
   position: relative;
   z-index: 10;
 }
@@ -57,18 +67,17 @@
 }
 
 .title {
-  font-size: 1.875rem;
-  font-weight: bold;
+  font-size: 2rem;
+  font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(to right, #3B82F6, #06B6D4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #232323;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
-  color: #94A3B8;
+  color: #222525;
   font-size: 1rem;
+  line-height: 1.5;
 }
 
 .form {
@@ -85,144 +94,110 @@
 
 .label {
   font-size: 0.875rem;
-  font-weight: 500;
-  color: #E2E8F0;
+  font-weight: 600;
+  color: #232323;
+  letter-spacing: 0.3px;
 }
 
-.input,
-.select {
+.input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: #0F172A;
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  border-radius: 0.5rem;
-  color: #E2E8F0;
+  padding: 0.875rem 1rem;
+  background-color: #fffffe;
+  border: 2px solid rgba(35, 35, 35, 0.1);
+  border-radius: 10px;
+  color: #232323;
   font-size: 1rem;
   transition: all 0.3s ease;
+  font-family: 'Inter', 'Poppins', sans-serif;
 }
 
-.input:focus,
-.select:focus {
+.input:focus {
   outline: none;
-  border-color: #3B82F6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #078080;
+  box-shadow: 0 0 0 4px rgba(7, 128, 128, 0.1);
+  background-color: #fffffe;
 }
 
 .input::placeholder {
-  color: #64748B;
-}
-
-.select option {
-  background-color: #0F172A;
-  color: #E2E8F0;
-}
-
-.warning {
-  padding: 1rem;
-  background-color: rgba(234, 179, 8, 0.1);
-  border: 1px solid rgba(234, 179, 8, 0.3);
-  border-radius: 0.5rem;
-  color: #FACC15;
-  font-size: 0.875rem;
+  color: rgba(35, 35, 35, 0.4);
 }
 
 .error {
-  color: #EF4444;
+  color: #f45d48;
   font-size: 0.875rem;
   margin: 0;
-  padding: 0.75rem;
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 0.5rem;
+  padding: 0.875rem 1rem;
+  background-color: rgba(244, 93, 72, 0.08);
+  border: 1px solid rgba(244, 93, 72, 0.2);
+  border-radius: 10px;
+  font-weight: 500;
 }
 
 .submitButton {
   position: relative;
   width: 100%;
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 1.5rem;
   border: none;
-  border-radius: 0.5rem;
-  background: linear-gradient(to right, #3B82F6, #06B6D4);
-  color: white;
-  font-weight: 600;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f45d48 0%, #e04a36 100%);
+  color: #232323;
+  font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(244, 93, 72, 0.25);
+  letter-spacing: 0.3px;
 }
 
 .submitButton::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, #3B82F6, #06B6D4);
-  filter: blur(20px);
-  opacity: 0.5;
-  z-index: -1;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .submitButton:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 6px 20px rgba(244, 93, 72, 0.35);
+}
+
+.submitButton:hover:not(:disabled)::before {
+  opacity: 1;
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .submitButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  background: #64748B;
-}
-
-.submitButton:disabled::before {
-  display: none;
 }
 
 .footerText {
   margin-top: 1.5rem;
   text-align: center;
-  color: #94A3B8;
+  color: #222525;
   font-size: 0.875rem;
 }
 
 .linkButton {
   background: none;
   border: none;
-  color: #3B82F6;
-  font-weight: 600;
+  color: #078080;
+  font-weight: 700;
   cursor: pointer;
   margin-left: 0.25rem;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
 }
 
 .linkButton:hover {
-  color: #06B6D4;
-}
-/* Add animation for year field */
-.inputGroup {
-  animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Style for warning message (if you enable coordinator warning) */
-.warning {
-  background-color: #fef3c7;
-  border: 1px solid #f59e0b;
-  color: #92400e;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
-
-.warning strong {
-  font-weight: 600;
+  color: #056b6b;
+  text-decoration-color: #078080;
 }

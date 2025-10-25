@@ -1,135 +1,198 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(35, 35, 35, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
+  z-index: 1000;
   padding: 1rem;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
+  font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
-  background-color: white;
-  border-radius: 0.5rem;
+  background-color: #fffffe;
+  border-radius: 16px;
   max-width: 42rem;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
+  box-shadow: 0 12px 48px rgba(35, 35, 35, 0.2);
+  animation: slideUp 0.3s ease;
+  border: 1px solid rgba(35, 35, 35, 0.05);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(2rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .modalHeader {
-  height: 10rem;
+  height: 12rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  padding: 1rem;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.modalHeader::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .modalHeader.technical {
-  background: linear-gradient(to bottom right, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
 }
 
 .modalHeader.cultural {
-  background: linear-gradient(to bottom right, #a855f7, #9333ea);
+  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
 }
 
 .modalHeader.sports {
-  background: linear-gradient(to bottom right, #10b981, #059669);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 }
 
 .modalHeader.workshop {
-  background: linear-gradient(to bottom right, #f97316, #ea580c);
+  background: linear-gradient(135deg, #f45d48 0%, #e04a36 100%);
 }
 
 .modalHeader.career {
-  background: linear-gradient(to bottom right, #ec4899, #db2777);
+  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
 }
 
 .modalTitle {
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
+  color: #fffffe;
+  font-size: 1.75rem;
+  font-weight: 700;
   text-align: center;
   margin: 0;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .closeButton {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  color: white;
-  background: none;
+  color: #fffffe;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 9999px;
-  transition: background-color 0.2s;
+  padding: 0.625rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  z-index: 2;
+  backdrop-filter: blur(4px);
 }
 
 .closeButton:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: rotate(90deg);
 }
 
 .modalBody {
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 .badges {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 0.625rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
 
 .badge {
   font-size: 0.75rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-weight: 500;
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .technicalBadge {
-  background-color: #dbeafe;
-  color: #1e40af;
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
+  color: #fffffe;
 }
 
 .culturalBadge {
-  background-color: #f3e8ff;
-  color: #7e22ce;
+  background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+  color: #fffffe;
 }
 
 .sportsBadge {
-  background-color: #d1fae5;
-  color: #065f46;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fffffe;
 }
 
 .workshopBadge {
-  background-color: #ffedd5;
-  color: #9a3412;
+  background: linear-gradient(135deg, #f45d48 0%, #e04a36 100%);
+  color: #fffffe;
 }
 
 .careerBadge {
-  background-color: #fce7f3;
-  color: #9f1239;
+  background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+  color: #fffffe;
 }
 
 .completedBadge {
-  background-color: #f3f4f6;
-  color: #4b5563;
+  background-color: #f8f5f2;
+  color: #232323;
+  border: 2px solid rgba(35, 35, 35, 0.1);
 }
 
 .description {
-  color: #374151;
+  color: #222525;
   margin-bottom: 1.5rem;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  padding: 1.25rem;
+  background-color: #f8f5f2;
+  border-radius: 10px;
+  border-left: 4px solid #078080;
 }
 
 .detailsGrid {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: 1rem;
+  gap: 1.25rem;
   margin-bottom: 1.5rem;
 }
 
@@ -142,61 +205,125 @@
 .detailItem {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: 0.875rem;
+  padding: 1rem;
+  background-color: #f8f5f2;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.detailItem:hover {
+  background-color: rgba(7, 128, 128, 0.05);
 }
 
 .icon {
-  color: #4f46e5;
+  color: #078080;
   margin-top: 0.25rem;
   flex-shrink: 0;
+  padding: 0.5rem;
+  background-color: rgba(7, 128, 128, 0.1);
+  border-radius: 8px;
+}
+
+.detailContent {
+  flex: 1;
 }
 
 .detailLabel {
-  font-weight: 500;
-  color: #111827;
+  font-weight: 600;
+  color: #232323;
   margin: 0 0 0.25rem 0;
   font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .detailValue {
-  color: #4b5563;
-  font-size: 0.875rem;
+  color: #222525;
+  font-size: 0.95rem;
   margin: 0;
+  line-height: 1.5;
 }
 
 .organizer {
   margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background-color: #f8f5f2;
+  border-radius: 10px;
+}
+
+.organizerLabel {
+  font-weight: 600;
+  color: #232323;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .organizerValue {
-  color: #4b5563;
-  margin: 0.5rem 0 0 0;
+  color: #222525;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .registerButton {
   width: 100%;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s;
-  background-color: #4f46e5;
-  color: white;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
+  color: #fffffe;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(7, 128, 128, 0.25);
+  letter-spacing: 0.3px;
 }
 
-.registerButton:hover {
-  background-color: #4338ca;
+.registerButton:hover:not(.registered):not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(7, 128, 128, 0.35);
+}
+
+.registerButton:active:not(.registered):not(.disabled) {
+  transform: translateY(0);
 }
 
 .registerButton.registered {
-  background-color: #d1fae5;
-  color: #065f46;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   cursor: not-allowed;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.registerButton.registered:hover {
+  transform: none;
 }
 
 .registerButton.disabled {
-  background-color: #e5e7eb;
-  color: #6b7280;
+  background-color: #f8f5f2;
+  color: #222525;
   cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.registerButton.disabled:hover {
+  transform: none;
+}
+
+@media (max-width: 640px) {
+  .modalHeader {
+    height: 10rem;
+  }
+  
+  .modalTitle {
+    font-size: 1.5rem;
+  }
+  
+  .modalBody {
+    padding: 1.5rem;
+  }
 }

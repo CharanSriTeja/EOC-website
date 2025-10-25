@@ -1,76 +1,163 @@
 import React from 'react';
-import { Clock, MapPin, Tag } from 'lucide-react';
+import { Calendar, MapPin, Users } from 'lucide-react';
 import styles from './EventCard.module.css';
 
-const EventCard = ({ event, isRegistered, onRegister, onViewDetails, showRegistration = true }) => {
-  const isCompleted = event.completed || new Date(event.date) < new Date();
-  const spotsLeft = event.capacity - event.registered;
-  const isFull = spotsLeft <= 0;
+const EventCard = ({ event, isRegistered, onRegister, onViewDetails }) => {
+  // Format date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  };
+
+  // Check if registration is open
+  const isRegistrationOpen = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const eventDate = new Date(event.date);
+    eventDate.setHours(0, 0, 0, 0);
+    
+    // Registration is open if:
+    // 1. Event requires registration
+    // 2. Event date is today or in the future
+    // 3. Event status is not completed
+    return event.registrationRequired && 
+           eventDate >= today && 
+           event.status !== 'completed';
+  };
+
+  // Get category badge color
+  const getCategoryColor = (category) => {
+    const colors = {
+      dance: '#9f7aea',
+      hackathon: '#4299e1',
+      workshop: '#48bb78',
+      competition: '#ed8936',
+      festival: '#f56565',
+      other: '#718096',
+      'Cultural & Sports Fest': '#ed64a6',
+      'National Festival': '#f56565',
+      'Academic & Cultural Support': '#4299e1',
+      'Health & Social Welfare': '#48bb78',
+      'Wellness & Personal Development': '#9f7aea',
+      'Academic Workshop': '#4299e1',
+      'Project Exhibition': '#ed8936'
+    };
+    return colors[category] || colors.other;
+  };
+
+  const registrationOpen = isRegistrationOpen();
 
   return (
     <div className={styles.card}>
-      <div className={`${styles.cardHeader} ${styles[event.category.toLowerCase()]}`}>
-        <h3 className={styles.cardTitle}>{event.title}</h3>
-      </div>
-      <div className={styles.cardBody}>
-        <div className={styles.badges}>
-          <span className={`${styles.badge} ${styles[event.category.toLowerCase() + 'Badge']}`}>
-            {event.category}
-          </span>
-          {isCompleted && (
-            <span className={`${styles.badge} ${styles.completedBadge}`}>
-              Completed
-            </span>
-          )}
-          {isRegistered && !isCompleted && (
-            <span className={`${styles.badge} ${styles.registeredBadge}`}>
-              Registered
-            </span>
-          )}
+      {/* Event Image */}
+      <div className={styles.imageContainer}>
+        <img 
+          src={event.image || 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=360'} 
+          alt={event.name}
+          className={styles.image}
+          onError={(e) => {
+            e.target.src = 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=360';
+          }}
+        />
+        
+        {/* Category Badge */}
+        <div 
+          className={styles.categoryBadge}
+          style={{ backgroundColor: getCategoryColor(event.category) }}
+        >
+          {event.category}
         </div>
-        <p className={styles.description}>{event.description}</p>
-        <div className={styles.details}>
-          <div className={styles.detailItem}>
-            <Clock size={16} />
-            <span>{event.date} at {event.time}</span>
-          </div>
-          <div className={styles.detailItem}>
-            <MapPin size={16} />
-            <span>{event.location}</span>
-          </div>
-          <div className={styles.detailItem}>
-            <Tag size={16} />
-            <span>{event.duration}</span>
-          </div>
-        </div>
-        {!isCompleted && (
-          <div className={styles.progressSection}>
-            <div className={styles.progressLabel}>
-              <span>Registration</span>
-              <span>{event.registered}/{event.capacity}</span>
-            </div>
-            <div className={styles.progressBar}>
-              <div
-                className={`${styles.progressFill} ${isFull ? styles.full : ''}`}
-                style={{ width: `${(event.registered / event.capacity) * 100}%` }}
-              />
-            </div>
+
+        {/* Status Badge */}
+        {event.status === 'upcoming' && (
+          <div className={styles.statusBadge}>
+            Upcoming
           </div>
         )}
+        {event.status === 'completed' && (
+          <div className={styles.statusBadgeCompleted}>
+            Completed
+          </div>
+        )}
+      </div>
+
+      {/* Event Content */}
+      <div className={styles.content}>
+        <h3 className={styles.title}>{event.name}</h3>
+        
+        {event.theme && (
+          <p className={styles.theme}>{event.theme}</p>
+        )}
+
+        <p className={styles.description}>
+          {event.description?.substring(0, 100)}
+          {event.description?.length > 100 ? '...' : ''}
+        </p>
+
+        <div className={styles.details}>
+          <div className={styles.detailItem}>
+            <Calendar size={16} />
+            <span>{formatDate(event.date)}</span>
+          </div>
+
+          {event.details?.venue && (
+            <div className={styles.detailItem}>
+              <MapPin size={16} />
+              <span>{event.details.venue}</span>
+            </div>
+          )}
+
+          {event.details?.duration && (
+            <div className={styles.detailItem}>
+              <Users size={16} />
+              <span>{event.details.duration} hours</span>
+            </div>
+          )}
+        </div>
+
         <div className={styles.actions}>
-          <button onClick={onViewDetails} className={styles.secondaryButton}>
+          <button 
+            className={styles.detailsButton}
+            onClick={onViewDetails}
+          >
             View Details
           </button>
-          {showRegistration && !isCompleted && (
-            <button
-              onClick={onRegister}
-              disabled={isRegistered || isFull}
-              className={`${styles.primaryButton} ${
-                isRegistered ? styles.registered : isFull ? styles.disabled : ''
-              }`}
-            >
-              {isRegistered ? 'Registered' : isFull ? 'Full' : 'Register'}
-            </button>
+
+          {/* Registration Button Logic */}
+          {event.registrationRequired ? (
+            registrationOpen ? (
+              !isRegistered ? (
+                <button 
+                  className={styles.registerButton}
+                  onClick={onRegister}
+                >
+                  Register
+                </button>
+              ) : (
+                <button 
+                  className={`${styles.registerButton} ${styles.registered}`}
+                  disabled
+                >
+                  Registered ✓
+                </button>
+              )
+            ) : (
+              <button 
+                className={`${styles.registerButton} ${styles.closed}`}
+                disabled
+              >
+                Registration Closed
+              </button>
+            )
+          ) : (
+            <div className={styles.noRegistrationBadge}>
+              No Registration Required
+            </div>
           )}
         </div>
       </div>

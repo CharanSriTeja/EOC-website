@@ -8,13 +8,6 @@ import ConfirmModal from './ConfirmModal.jsx';
 import axiosInstance from '../../api/axiosInstance.jsx';
 import styles from './CoordinatorDashboard.module.css';
 
-const coordinatorProfile = {
-  name: "Dr. Arjun Mehta",
-  email: "arjun.mehta@college.edu",
-  role: "Event Coordinator",
-  department: "Computer Science",
-};
-
 const CoordinatorDashboard = () => {
   const [events, setEvents] = useState([]);
   const [currentView, setCurrentView] = useState('dashboard');
@@ -26,16 +19,9 @@ const CoordinatorDashboard = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [deletingEventId, setDeletingEventId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [profile, setProfile] = useState(coordinatorProfile);
-  const [editingProfile, setEditingProfile] = useState(false);
-  const [eventForm, setEventForm] = useState({
-    name: '',
-    date: '',
-    description: '',
-    venue: '',
-    category: '',
-    image: '',
-  });
+  // REMOVED: const [profile, setProfile] = useState(coordinatorProfile);
+  // REMOVED: const [editingProfile, setEditingProfile] = useState(false);
+  
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -50,23 +36,6 @@ const CoordinatorDashboard = () => {
     };
     fetchEvents();
   }, []);
-
-  // Close sidebar when clicking outside on mobile
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (sidebarOpen && window.innerWidth < 1024) {
-        const sidebar = document.querySelector(`.${styles.sidebar}`);
-        const menuButton = document.querySelector(`.${styles.menuButton}`);
-        
-        if (sidebar && !sidebar.contains(event.target) && menuButton && !menuButton.contains(event.target)) {
-          setSidebarOpen(false);
-        }
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [sidebarOpen]);
 
   const getCurrentDate = () => new Date().toISOString().split('T')[0];
 
@@ -107,89 +76,119 @@ const CoordinatorDashboard = () => {
     return eventsToFilter;
   };
 
-  const openModal = (type, event = null) => {
-    setModalType(type);
-    setSelectedEvent(event);
+  // In CoordinatorDashboard.jsx
+// In CoordinatorDashboard.jsx
 
-    if (type === 'add') {
-      setEventForm({
-        name: '',
-        date: '',
-        description: '',
-        venue: '',
-        category: '',
-        image: '',
-      });
-    } else if (type === 'edit' && event) {
-      setEventForm({
-        name: event.name,
-        date: event.date ? event.date.split('T')[0] : '', 
-        description: event.description,
-        venue: event.details?.venue || '',
-        category: event.category,
-        image: event.image || '',
-      });
-    }
+const [eventForm, setEventForm] = useState({
+  name: '',
+  date: '',
+  description: '',
+  venue: '',
+  category: '',
+  image: '',
+  registrationRequired: true, // NEW: Default to true
+});
 
-    setShowModal(true);
-  };
+const openModal = (type, event = null) => {
+  setModalType(type);
+  setSelectedEvent(event);
 
-  const closeModal = () => {
+  if (type === 'add') {
+    setEventForm({
+      name: '',
+      date: '',
+      description: '',
+      venue: '',
+      category: '',
+      image: '',
+      registrationRequired: true, // NEW: Default to true for new events
+    });
+  } else if (type === 'edit' && event) {
+    setEventForm({
+      name: event.name,
+      date: event.date ? event.date.split('T')[0] : '', 
+      description: event.description,
+      venue: event.details?.venue || '',
+      category: event.category,
+      image: event.image || '',
+      registrationRequired: event.registrationRequired !== undefined ? event.registrationRequired : true, // NEW
+    });
+  }
+
+  setShowModal(true);
+};
+
+const closeModal = () => {
     setShowModal(false);
     setModalType('');
     setSelectedEvent(null);
+    setEventForm({
+      name: '',
+      date: '',
+      description: '',
+      venue: '',
+      category: '',
+      image: '',
+      registrationRequired: true,
+    });
   };
 
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setEventForm(prev => ({ ...prev, [name]: value }));
-  };
+  // Add this function after the closeModal function in CoordinatorDashboard.jsx
 
-  const handleAddEvent = async () => {
-    const eventData = {
-      name: eventForm.name,
-      date: eventForm.date,
-      description: eventForm.description,
-      category: eventForm.category,
-      image: eventForm.image,
-      details: {
-        venue: eventForm.venue
-      }
-    };
-    
-    try {
-      const response = await axiosInstance.post('/events', eventData);
-      if (response.data.success) {
-        setEvents([response.data.data, ...events]);
-        closeModal();
-      }
-    } catch (error) {
-      console.error('Error adding event:', error);
+const handleFormChange = (e) => {
+  const { name, value } = e.target;
+  setEventForm(prev => ({ ...prev, [name]: value }));
+};
+
+
+const handleAddEvent = async () => {
+  const eventData = {
+    name: eventForm.name,
+    date: eventForm.date,
+    description: eventForm.description,
+    category: eventForm.category,
+    image: eventForm.image,
+    registrationRequired: eventForm.registrationRequired, // NEW
+    details: {
+      venue: eventForm.venue
     }
   };
+  
+  try {
+    const response = await axiosInstance.post('/events', eventData);
+    if (response.data.success) {
+      setEvents([response.data.data, ...events]);
+      closeModal();
+    }
+  } catch (error) {
+    console.error('Error adding event:', error);
+  }
+};
 
-  const handleEditEvent = async () => {
-    const eventData = {
-      name: eventForm.name,
-      date: eventForm.date,
-      description: eventForm.description,
-      category: eventForm.category,
-      image: eventForm.image,
-      details: {
-        venue: eventForm.venue
-      }
-    };
-    
-    try {
-      const response = await axiosInstance.patch(`/events/${selectedEvent._id}`, eventData);
-      if (response.data.success) {
-        setEvents(events.map(event => event._id === selectedEvent._id ? response.data.data : event));
-        closeModal();
-      }
-    } catch (error) {
-      console.error('Error editing event:', error);
+const handleEditEvent = async () => {
+  const eventData = {
+    name: eventForm.name,
+    date: eventForm.date,
+    description: eventForm.description,
+    category: eventForm.category,
+    image: eventForm.image,
+    registrationRequired: eventForm.registrationRequired, // NEW
+    details: {
+      venue: eventForm.venue
     }
   };
+  
+  try {
+    const response = await axiosInstance.patch(`/events/${selectedEvent._id}`, eventData);
+    if (response.data.success) {
+      setEvents(events.map(event => event._id === selectedEvent._id ? response.data.data : event));
+      closeModal();
+    }
+  } catch (error) {
+    console.error('Error editing event:', error);
+  }
+};
+
 
   const handleDeleteClick = (id) => {
     setDeletingEventId(id);
@@ -219,15 +218,43 @@ const CoordinatorDashboard = () => {
     setShowConfirm(false);
   };
 
-  const handleProfileChange = (e) => {
-    const { name, value } = e.target;
-    setProfile(prev => ({ ...prev, [name]: value }));
+  // REMOVED: handleProfileChange function
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
   };
 
-  // Toggle sidebar handler
-  const toggleSidebar = () => {
-    console.log('Toggle sidebar clicked, current state:', sidebarOpen);
-    setSidebarOpen(!sidebarOpen);
+  const renderContent = () => {
+    switch (currentView) {
+      case 'dashboard':
+        return (
+          <DashboardView 
+            events={events} 
+            upcoming={upcoming} 
+            ongoing={ongoing} 
+            completed={completed} 
+            totalParticipants={totalParticipants} 
+          />
+        );
+      case 'events':
+        return (
+          <EventsView 
+            events={filteredEvents()} 
+            filter={filter} 
+            setFilter={setFilter} 
+            searchQuery={searchQuery} 
+            setSearchQuery={setSearchQuery} 
+            openModal={openModal} 
+            handleDeleteClick={handleDeleteClick} 
+            getEventStatus={getEventStatus} 
+          />
+        );
+      case 'profile':
+        // REMOVED: All profile props
+        return <ProfileView />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -241,7 +268,6 @@ const CoordinatorDashboard = () => {
         setSidebarOpen={setSidebarOpen} 
       />
       
-      {/* Menu Toggle Button */}
       <button 
         className={styles.menuButton} 
         onClick={toggleSidebar}
@@ -251,35 +277,7 @@ const CoordinatorDashboard = () => {
       </button>
       
       <main className={styles.mainContent}>
-        {currentView === 'dashboard' && (
-          <DashboardView 
-            events={events} 
-            upcoming={upcoming} 
-            ongoing={ongoing} 
-            completed={completed} 
-            totalParticipants={totalParticipants} 
-          />
-        )}
-        {currentView === 'events' && (
-          <EventsView 
-            events={filteredEvents()} 
-            filter={filter} 
-            setFilter={setFilter} 
-            searchQuery={searchQuery} 
-            setSearchQuery={setSearchQuery} 
-            openModal={openModal} 
-            handleDeleteClick={handleDeleteClick} 
-            getEventStatus={getEventStatus} 
-          />
-        )}
-        {currentView === 'profile' && (
-          <ProfileView 
-            profile={profile} 
-            editingProfile={editingProfile} 
-            setEditingProfile={setEditingProfile} 
-            handleProfileChange={handleProfileChange} 
-          />
-        )}
+        {renderContent()}
       </main>
 
       <Modal 

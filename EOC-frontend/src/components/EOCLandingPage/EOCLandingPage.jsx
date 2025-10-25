@@ -1,86 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, X, Calendar, Users, Instagram, Linkedin, Twitter, Mail, ArrowRight, Code, Zap, Trophy } from 'lucide-react';
+import axiosInstance from '../../api/axiosInstance';
 import styles from './EOCLandingPage.module.css';
-
-const upcomingEvents = [
-  {
-    id: 1,
-    title: "HackNova 2025",
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=500&fit=crop",
-    shortDesc: "24-hour hackathon featuring AI/ML challenges and exciting prizes.",
-    fullDesc: "HackNova 2025 is our flagship hackathon event bringing together the brightest minds to solve real-world problems using cutting-edge technology.",
-    date: "March 15-16, 2025",
-    theme: "Innovation for Tomorrow",
-    rules: ["Teams of 2-4 members", "Original code only", "All skill levels welcome", "Mentorship available"],
-    category: "Hackathon"
-  },
-  {
-    id: 2,
-    title: "Web Dev Workshop",
-    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=500&fit=crop",
-    shortDesc: "Hands-on workshop covering modern web development with React and Node.js.",
-    fullDesc: "Learn modern web development from industry experts. This comprehensive workshop covers React, Node.js, MongoDB, and deployment strategies.",
-    date: "February 28, 2025",
-    theme: "Full Stack Mastery",
-    rules: ["Bring your laptop", "Basic HTML/CSS knowledge helpful", "All materials provided", "Certificate of participation"],
-    category: "Workshop"
-  },
-  {
-    id: 3,
-    title: "Code Sprint Challenge",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=500&fit=crop",
-    shortDesc: "Competitive coding event with algorithmic problem-solving challenges.",
-    fullDesc: "Test your algorithmic skills in this intense competitive programming challenge. Solve problems and compete for top positions.",
-    date: "March 5, 2025",
-    theme: "Speed & Accuracy",
-    rules: ["Individual participation", "3-hour time limit", "Online platform", "Prizes for top performers"],
-    category: "Competition"
-  }
-];
-
-const pastEvents = [
-  {
-    id: 4,
-    title: "TechFest 2024",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=500&fit=crop",
-    shortDesc: "Annual technical festival with multiple tech competitions and guest lectures.",
-    fullDesc: "TechFest 2024 was a grand success with over 500 participants across various technical events.",
-    date: "December 10-12, 2024",
-    theme: "Tech Revolution",
-    rules: ["Open to all students", "Multiple event categories", "Inter-college participation"],
-    category: "Festival"
-  },
-  {
-    id: 5,
-    title: "AI/ML Bootcamp",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=500&fit=crop",
-    shortDesc: "Intensive bootcamp on machine learning fundamentals and neural networks.",
-    fullDesc: "A week-long intensive bootcamp covering machine learning fundamentals, neural networks, and practical AI applications.",
-    date: "November 20-25, 2024",
-    theme: "AI for Everyone",
-    rules: ["Python knowledge required", "Hands-on projects", "Industry mentors"],
-    category: "Bootcamp"
-  },
-  {
-    id: 6,
-    title: "Open Source Day",
-    image: "https://images.unsplash.com/photo-1618761714954-0b8cd0026356?w=800&h=500&fit=crop",
-    shortDesc: "Collaborative event introducing students to open source contributions.",
-    fullDesc: "Students learned how to contribute to open source projects and collaborate with developers worldwide.",
-    date: "October 15, 2024",
-    theme: "Code Together",
-    rules: ["GitHub account required", "Beginner friendly", "Collaborative learning"],
-    category: "Workshop"
-  }
-];
 
 function EOCLandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentPage, setCurrentPage] = useState('home');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [signUpRole, setSignUpRole] = useState('student');
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [pastEvents, setPastEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
@@ -91,6 +21,44 @@ function EOCLandingPage() {
   const goToSignUp = () => {
     navigate('/signup');
   };
+
+  // Fetch events from backend
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get('/events');
+        
+        if (response.data.success) {
+          const allEvents = response.data.data;
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          // Separate upcoming and past events
+          const upcoming = allEvents.filter(event => {
+            const eventDate = new Date(event.date);
+            eventDate.setHours(0, 0, 0, 0);
+            return eventDate >= today && event.status !== 'completed';
+          });
+
+          const past = allEvents.filter(event => {
+            const eventDate = new Date(event.date);
+            eventDate.setHours(0, 0, 0, 0);
+            return eventDate < today || event.status === 'completed';
+          });
+
+          setUpcomingEvents(upcoming);
+          setPastEvents(past);
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -109,14 +77,29 @@ function EOCLandingPage() {
   };
 
   const handleJoinEvent = () => {
-    if (!isLoggedIn) {
-      setCurrentPage('signin');
-      setSelectedEvent(null);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/signin');
     } else {
-      // In a real app, this would be a modal or a toast notification
-      console.log('Event registration successful!');
-      alert('Event registration successful!');
+      alert('Please login to your dashboard to register for events.');
+      navigate('/signin');
     }
+    setSelectedEvent(null);
+  };
+
+  // Format date helper
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  // Get default image
+  const getEventImage = (event) => {
+    return event.image || 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=360';
   };
 
   return (
@@ -124,15 +107,14 @@ function EOCLandingPage() {
       <nav className={`${styles.nav} ${scrolled ? styles.navScrolled : ''}`}>
         <div className={`${styles.container} ${styles.navContainer}`}>
           <div className={styles.logoWrapper}>
-            <div className={styles.logo}>
-              <div className={styles.logoBlur}></div>
-              <div className={styles.logoIconWrapper}>
-                <Code className={styles.logoIcon} />
-              </div>
-            </div>
+            <img 
+              src="https://res.cloudinary.com/dxpzm7irj/image/upload/v1761391988/EOC_logo_gbuw9j.jpg" 
+              alt="EOC Logo" 
+              className={styles.logoImage}
+            />
             <div>
               <span className={styles.logoText}>EOC</span>
-              <p className={styles.logoSubtext}>Engineers of Code</p>
+              <p className={styles.logoSubtext}>Event Organizing Cell</p>
             </div>
           </div>
 
@@ -176,19 +158,19 @@ function EOCLandingPage() {
                   <span>SRKR Engineering College</span>
                 </div>
                 <h1 className={styles.heroTitle}>
-                  <span>Build. </span>
-                  <span>Innovate. </span>
-                  <span className={styles.textGradient}>Create.</span>
+                  <span>Dream. </span>
+                  <span>Design. </span>
+                  <span className={styles.textGradient}>Deliver.</span>
                 </h1>
                 <p className={styles.heroSubtitle}>
-                  Join the premier coding community where passionate engineers unite to transform ideas into reality through hackathons, workshops, and cutting-edge tech events.
+                  The Event Organizing Cell at SRKR Engineering College unites passionate students to plan, manage, and celebrate events that make campus life unforgettable.
                 </p>
                 <div className={styles.heroButtons}>
                   <button onClick={() => scrollToSection('events')} className={`${styles.button} ${styles.buttonPrimary}`}>
-                    Explore Events <ArrowRight className={styles.buttonIcon} />
+                    View Events <ArrowRight className={styles.buttonIcon} />
                   </button>
                   <button onClick={() => scrollToSection('about')} className={`${styles.button} ${styles.buttonSecondary}`}>
-                    Learn More
+                    Know More
                   </button>
                 </div>
               </div>
@@ -207,7 +189,7 @@ function EOCLandingPage() {
                   <span className={styles.textGradient}>About EOC</span>
                 </h2>
                 <p className={styles.sectionSubtitle}>
-                  Engineers of Code is SRKR Engineering College's premier coding club, dedicated to fostering innovation and technical excellence.
+                  The Event Organizing Club (EOC) of SRKR Engineering College is dedicated to bringing together the campus community through well-planned and engaging events. Our mission is to foster connection, creativity and collaboration among students across disciplines, while our vision is to create memorable experiences and a lively campus culture.
                 </p>
               </div>
               <div className={`${styles.grid} ${styles.aboutGrid}`}>
@@ -216,21 +198,29 @@ function EOCLandingPage() {
                     <Users className={styles.infoCardIcon} />
                   </div>
                   <h3 className={styles.infoCardTitle}>Community</h3>
-                  <p className={styles.infoCardText}>Join a vibrant community of 500+ passionate coders and tech enthusiasts.</p>
+                  <p className={styles.infoCardText}>
+                    Join a vibrant community of students at SRKR who love planning and organizing events that bring everyone together.
+                  </p>
                 </div>
+
                 <div className={styles.infoCard}>
                   <div className={styles.infoCardIconWrapper}>
                     <Zap className={styles.infoCardIcon} />
                   </div>
                   <h3 className={styles.infoCardTitle}>Events</h3>
-                  <p className={styles.infoCardText}>Regular hackathons, workshops, and coding competitions throughout the year.</p>
+                  <p className={styles.infoCardText}>
+                    Participate in cultural fests, workshops, competitions, and campus-wide celebrations organized throughout the year.
+                  </p>
                 </div>
+
                 <div className={styles.infoCard}>
                   <div className={styles.infoCardIconWrapper}>
                     <Trophy className={styles.infoCardIcon} />
                   </div>
-                  <h3 className={styles.infoCardTitle}>Innovation</h3>
-                  <p className={styles.infoCardText}>Create impactful projects and learn cutting-edge technologies from experts.</p>
+                  <h3 className={styles.infoCardTitle}>Experience</h3>
+                  <p className={styles.infoCardText}>
+                    Gain hands-on experience in event planning, teamwork, leadership, and creating unforgettable campus experiences.
+                  </p>
                 </div>
               </div>
             </div>
@@ -245,65 +235,111 @@ function EOCLandingPage() {
                 <p className={styles.sectionSubtitle}>Discover upcoming hackathons, workshops, and competitions</p>
               </div>
 
-              <div className={styles.eventCategory}>
-                <div className={styles.divider}>
-                  <h3 className={styles.dividerText}>Upcoming Events</h3>
+              {loading ? (
+                <div style={{ textAlign: 'center', padding: '3rem' }}>
+                  <p>Loading events...</p>
                 </div>
-                <div className={`${styles.grid} ${styles.eventsGrid}`}>
-                  {upcomingEvents.map(event => (
-                    <div key={event.id} className={styles.eventCard}>
-                      <div className={styles.eventCardImageWrapper}>
-                        <img src={event.image} alt={event.title} className={styles.eventCardImage} />
-                        <div className={styles.eventCardCategory}>{event.category}</div>
-                      </div>
-                      <div className={styles.eventCardContent}>
-                        <h3 className={styles.eventCardTitle}>{event.title}</h3>
-                        <div className={styles.eventCardDate}>
-                          <Calendar width={16} height={16} />
-                          <span>{event.date}</span>
-                        </div>
-                        <p className={styles.eventCardDesc}>{event.shortDesc}</p>
-                        <button
-                          onClick={() => setSelectedEvent(event)}
-                          className={`${styles.button} ${styles.buttonPrimary} ${styles.buttonFullWidth}`}
-                        >
-                          View Details
-                        </button>
-                      </div>
+              ) : (
+                <>
+                  {/* Upcoming Events */}
+                  <div className={styles.eventCategory}>
+                    <div className={styles.divider}>
+                      <h3 className={styles.dividerText}>Upcoming Events</h3>
                     </div>
-                  ))}
-                </div>
-              </div>
+                    {upcomingEvents.length > 0 ? (
+                      <div className={`${styles.grid} ${styles.eventsGrid}`}>
+                        {upcomingEvents.map(event => (
+                          <div key={event._id} className={styles.eventCard}>
+                            <div className={styles.eventCardImageWrapper}>
+                              <img 
+                                src={getEventImage(event)} 
+                                alt={event.name} 
+                                className={styles.eventCardImage}
+                                onError={(e) => {
+                                  e.target.src = 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=360';
+                                }}
+                              />
+                              <div className={styles.eventCardCategory}>
+                                {event.category}
+                              </div>
+                            </div>
+                            <div className={styles.eventCardContent}>
+                              <h3 className={styles.eventCardTitle}>{event.name}</h3>
+                              <div className={styles.eventCardDate}>
+                                <Calendar width={16} height={16} />
+                                <span>{formatDate(event.date)}</span>
+                              </div>
+                              <p className={styles.eventCardDesc}>
+                                {event.description?.substring(0, 100)}
+                                {event.description?.length > 100 ? '...' : ''}
+                              </p>
+                              <button
+                                onClick={() => setSelectedEvent(event)}
+                                className={`${styles.button} ${styles.buttonPrimary} ${styles.buttonFullWidth}`}
+                              >
+                                View Details
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p style={{ textAlign: 'center', padding: '2rem', color: '#718096' }}>
+                        No upcoming events at the moment. Check back soon!
+                      </p>
+                    )}
+                  </div>
 
-              <div className={styles.eventCategory}>
-                <div className={styles.divider}>
-                  <h3 className={styles.dividerText}>Past Events</h3>
-                </div>
-                <div className={`${styles.grid} ${styles.eventsGrid}`}>
-                  {pastEvents.map(event => (
-                    <div key={event.id} className={styles.eventCard}>
-                      <div className={styles.eventCardImageWrapper}>
-                        <img src={event.image} alt={event.title} className={styles.eventCardImage} />
-                        <div className={styles.eventCardCategory}>{event.category}</div>
-                      </div>
-                      <div className={styles.eventCardContent}>
-                        <h3 className={styles.eventCardTitle}>{event.title}</h3>
-                        <div className={styles.eventCardDate}>
-                          <Calendar width={16} height={16} />
-                          <span>{event.date}</span>
-                        </div>
-                        <p className={styles.eventCardDesc}>{event.shortDesc}</p>
-                        <button
-                          onClick={() => setSelectedEvent(event)}
-                          className={`${styles.button} ${styles.buttonPrimary} ${styles.buttonFullWidth}`}
-                        >
-                          View Details
-                        </button>
-                      </div>
+                  {/* Past Events */}
+                  <div className={styles.eventCategory}>
+                    <div className={styles.divider}>
+                      <h3 className={styles.dividerText}>Past Events</h3>
                     </div>
-                  ))}
-                </div>
-              </div>
+                    {pastEvents.length > 0 ? (
+                      <div className={`${styles.grid} ${styles.eventsGrid}`}>
+                        {pastEvents.map(event => (
+                          <div key={event._id} className={styles.eventCard}>
+                            <div className={styles.eventCardImageWrapper}>
+                              <img 
+                                src={getEventImage(event)} 
+                                alt={event.name} 
+                                className={styles.eventCardImage}
+                                onError={(e) => {
+                                  e.target.src = 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=360';
+                                }}
+                              />
+                              <div className={styles.eventCardCategory}>
+                                {event.category}
+                              </div>
+                            </div>
+                            <div className={styles.eventCardContent}>
+                              <h3 className={styles.eventCardTitle}>{event.name}</h3>
+                              <div className={styles.eventCardDate}>
+                                <Calendar width={16} height={16} />
+                                <span>{formatDate(event.date)}</span>
+                              </div>
+                              <p className={styles.eventCardDesc}>
+                                {event.description?.substring(0, 100)}
+                                {event.description?.length > 100 ? '...' : ''}
+                              </p>
+                              <button
+                                onClick={() => setSelectedEvent(event)}
+                                className={`${styles.button} ${styles.buttonPrimary} ${styles.buttonFullWidth}`}
+                              >
+                                View Details
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p style={{ textAlign: 'center', padding: '2rem', color: '#718096' }}>
+                        No past events to display.
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </section>
 
@@ -339,7 +375,6 @@ function EOCLandingPage() {
         </>
       )}
 
-
       {/* Event Detail Modal */}
       {selectedEvent && (
         <div className={styles.modalOverlay}>
@@ -351,35 +386,54 @@ function EOCLandingPage() {
               <X width={28} height={28} />
             </button>
 
-            <img src={selectedEvent.image} alt={selectedEvent.title} className={styles.modalImage} />
+            <img 
+              src={getEventImage(selectedEvent)} 
+              alt={selectedEvent.name} 
+              className={styles.modalImage}
+              onError={(e) => {
+                e.target.src = 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=360';
+              }}
+            />
 
             <div className={styles.modalBody}>
               <span className={styles.modalCategory}>
                 {selectedEvent.category}
               </span>
-              <h2 className={styles.modalTitle}>{selectedEvent.title}</h2>
+              <h2 className={styles.modalTitle}>{selectedEvent.name}</h2>
               <div className={styles.modalDate}>
                 <Calendar width={16} height={16} />
-                <span>{selectedEvent.date}</span>
+                <span>{formatDate(selectedEvent.date)}</span>
               </div>
 
               <div className={styles.modalDesc}>
-                <p>{selectedEvent.fullDesc}</p>
-                <p><strong className={styles.modalDescStrong}>Theme:</strong> {selectedEvent.theme}</p>
+                <p>{selectedEvent.description || 'No description available'}</p>
+                {selectedEvent.theme && (
+                  <p><strong className={styles.modalDescStrong}>Theme:</strong> {selectedEvent.theme}</p>
+                )}
+                {selectedEvent.details?.venue && (
+                  <p><strong className={styles.modalDescStrong}>Venue:</strong> {selectedEvent.details.venue}</p>
+                )}
+                {selectedEvent.eligibility && (
+                  <p><strong className={styles.modalDescStrong}>Eligibility:</strong> {selectedEvent.eligibility}</p>
+                )}
               </div>
 
-              <h3 className={styles.modalRulesTitle}>Rules & Guidelines</h3>
-              <ul className={styles.modalRulesList}>
-                {selectedEvent.rules.map((rule, index) => (
-                  <li key={index}>{rule}</li>
-                ))}
-              </ul>
+              {selectedEvent.details?.rules && selectedEvent.details.rules.length > 0 && (
+                <>
+                  <h3 className={styles.modalRulesTitle}>Rules & Guidelines</h3>
+                  <ul className={styles.modalRulesList}>
+                    {selectedEvent.details.rules.map((rule, index) => (
+                      <li key={index}>{rule}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
 
               <button
                 onClick={handleJoinEvent}
                 className={`${styles.button} ${styles.buttonPrimary} ${styles.buttonFullWidth}`}
               >
-                {isLoggedIn ? 'Register for this Event' : 'Sign In to Register'}
+                Sign In to Register
               </button>
             </div>
           </div>
@@ -399,7 +453,7 @@ function EOCLandingPage() {
                 </div>
                 <div>
                   <span className={styles.logoText}>EOC</span>
-                  <p className={styles.logoSubtext}>Engineers of Code</p>
+                  <p className={styles.logoSubtext}>Event Organizing Cell</p>
                 </div>
               </div>
               <p className={styles.footerAddress}>SRKR Engineering College, Bhimavaram</p>
@@ -418,10 +472,10 @@ function EOCLandingPage() {
             <div>
               <h3 className={styles.footerTitle}>Follow Us</h3>
               <div className={styles.socialLinks}>
-                <a href="#" className={styles.socialLink}><Twitter width={24} height={24} /></a>
-                <a href="#" className={styles.socialLink}><Linkedin width={24} height={24} /></a>
-                <a href="#" className={styles.socialLink}><Instagram width={24} height={24} /></a>
-                <a href="#" className={styles.socialLink}><Mail width={24} height={24} /></a>
+                <a href="https://www.linkedin.com/school/srkr-engineering-college/" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Twitter width={24} height={24} /></a>
+                <a href="https://www.linkedin.com/school/srkr-engineering-college/" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Linkedin width={24} height={24} /></a>
+                <a href="https://www.instagram.com/srkr_eoc?igsh=ZDNlc21xbG5kNnJw" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Instagram width={24} height={24} /></a>
+                <a href="mailto:charansritejachilukuri@gmail.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Mail width={24} height={24} /></a>
               </div>
             </div>
           </div>
@@ -434,9 +488,4 @@ function EOCLandingPage() {
   );
 }
 
-// export default EOCLandingPage; // This line is often commented out or removed in single-file environments
-// Instead, the component is usually rendered directly if this were an index.jsx
-// For a library component, the export is correct.
-// Assuming this is the main App component for a single-file build:
 export default EOCLandingPage;
-

@@ -20,13 +20,11 @@ const StudentDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch user profile and events on mount
   useEffect(() => {
     fetchUserData();
     fetchEvents();
   }, []);
 
-  // Fetch current user profile
   const fetchUserData = async () => {
     try {
       const response = await axiosInstance.get('/users/profile');
@@ -34,10 +32,13 @@ const StudentDashboard = () => {
         const userData = response.data.data;
         setUser(userData);
         
-        // Set registered event IDs from user data
-        setRegisteredEventIds(userData.registeredEvents?.map(event => 
-          typeof event === 'string' ? event : event._id
-        ) || []);
+        const eventIds = (userData.registeredEvents || []).map(event => {
+          if (typeof event === 'string') return event;
+          if (event && event._id) return event._id.toString();
+          return null;
+        }).filter(Boolean);
+        
+        setRegisteredEventIds(eventIds);
       }
     } catch (err) {
       console.error('Error fetching user data:', err);
@@ -47,11 +48,12 @@ const StudentDashboard = () => {
     }
   };
 
-  // Fetch all events
+  // Fetch ALL events (no filtering here)
   const fetchEvents = async () => {
     try {
       const response = await axiosInstance.get('/events');
       if (response.data.success) {
+        // Get all events without filtering by date
         setEvents(response.data.data);
       }
     } catch (err) {
@@ -59,17 +61,14 @@ const StudentDashboard = () => {
       setError('Failed to load events');
     }
   };
-
-  // Register for an event
+  
   const handleRegister = async (eventId) => {
     try {
       const response = await axiosInstance.post(`/events/${eventId}/register`);
       
       if (response.data.success) {
-        // Update local state
         setRegisteredEventIds([...registeredEventIds, eventId]);
         
-        // Add notification
         const event = events.find(e => e._id === eventId);
         if (event) {
           const newNotification = {
@@ -83,7 +82,6 @@ const StudentDashboard = () => {
           setNotifications([newNotification, ...notifications]);
         }
 
-        // Refresh user data to get updated registeredEvents
         fetchUserData();
       }
     } catch (err) {
@@ -92,16 +90,13 @@ const StudentDashboard = () => {
     }
   };
 
-  // Unregister from an event
   const handleUnregister = async (eventId) => {
     try {
       const response = await axiosInstance.delete(`/events/${eventId}/register`);
       
       if (response.data.success) {
-        // Update local state
         setRegisteredEventIds(registeredEventIds.filter(id => id !== eventId));
         
-        // Add notification
         const event = events.find(e => e._id === eventId);
         if (event) {
           const newNotification = {
@@ -115,7 +110,6 @@ const StudentDashboard = () => {
           setNotifications([newNotification, ...notifications]);
         }
 
-        // Refresh user data
         fetchUserData();
       }
     } catch (err) {
@@ -139,7 +133,14 @@ const StudentDashboard = () => {
     setSidebarOpen(false);
   };
 
-  // Update user state when profile is updated
+ const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+
   const handleUserUpdate = (updatedUser) => {
     setUser(updatedUser);
   };
@@ -174,7 +175,7 @@ const StudentDashboard = () => {
       case 'events':
         return (
           <EventsList
-            events={events}
+            events={events} // Pass all events
             registeredEventIds={registeredEventIds}
             onRegister={handleRegister}
           />
@@ -190,7 +191,7 @@ const StudentDashboard = () => {
       case 'certificates':
         return (
           <Certificates
-            certificates={[]} // Update when you add certificates to backend
+            certificates={[]}
             events={events}
           />
         );
@@ -209,7 +210,6 @@ const StudentDashboard = () => {
     }
   };
 
-  // Show loading state if user is not loaded yet
   if (!user) {
     return (
       <div className={styles.dashboard}>
@@ -226,17 +226,17 @@ const StudentDashboard = () => {
   }
 
   return (
-    <div className={styles.dashboard}>
+<div className={styles.dashboard}>
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
+        onClose={closeSidebar}
       />
       <div className={styles.mainContent}>
         <Header
           user={user}
-          onMenuClick={() => setSidebarOpen(true)}
+          onMenuClick={toggleSidebar}  
           onProfileClick={handleProfileClick}
         />
         <main className={styles.content}>
@@ -244,6 +244,7 @@ const StudentDashboard = () => {
         </main>
       </div>
     </div>
+
   );
 };
 

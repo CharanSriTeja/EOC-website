@@ -71,12 +71,14 @@ const Profile = () => {
   };
 
   if (loading) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.loading}>Loading profile...</div>
-      </div>
-    );
-  }
+  return (
+    <div className={styles.loaderContainer}>
+      <div className={styles.loader}></div>
+      <p className={styles.loaderText}>Loading profile...</p>
+    </div>
+  );
+}
+
 
   if (error) {
     return (

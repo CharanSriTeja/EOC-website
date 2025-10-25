@@ -11,24 +11,52 @@ function SignIn({ setIsLoggedIn }) {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  e.preventDefault();
+  setError('');
+  setLoading(true);
+
+  try {
+    console.log('Sending request with:', { email, password }); // Debug
     
-    try {
-      const response = await axiosInstance.post('/auth/sign-in', { email, password });
-      const { token, user } = response.data.data;
-      localStorage.setItem('token', token);
-      setIsLoggedIn(true);
+    const response = await axiosInstance.post('/auth/sign-in', { 
+      email, 
+      password 
+    });
+    
+    console.log('Full response:', response); // Debug
+    console.log('Response data:', response.data); // Debug
+    console.log('Success flag:', response.data.success); // Debug
+    console.log('Token:', response.data.token); // Debug
+    console.log('User:', response.data.user); // Debug
+
+    if (response.data && response.data.success) {
+      const { token, user } = response.data;
       
-      if (user.role === 'student') navigate('/student-dashboard');
-      else if (user.role === 'coordinator') navigate('/coordinator-dashboard');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Sign In failed');
-    } finally {
-      setLoading(false);
+      console.log('Storing token...'); // Debug
+      localStorage.setItem('token', token);
+      
+      console.log('Token stored:', localStorage.getItem('token')); // Debug
+      
+      setIsLoggedIn(true);
+
+      console.log('Navigating to:', user.role === 'student' ? '/student-dashboard' : '/coordinator-dashboard'); // Debug
+
+      if (user.role === 'student') {
+        navigate('/student-dashboard');
+      } else if (user.role === 'coordinator') {
+        navigate('/coordinator-dashboard');
+      }
     }
-  };
+
+  } catch (err) {
+    console.error('SignIn error:', err); // Debug
+    console.error('Error response:', err.response); // Debug
+    setError(err.response?.data?.message || 'Sign in failed');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className={styles.container}>
@@ -40,7 +68,7 @@ function SignIn({ setIsLoggedIn }) {
       <div className={styles.formCard}>
         <div className={styles.header}>
           <h2 className={styles.title}>Sign In</h2>
-          <p className={styles.subtitle}>Welcome back to EOC</p>
+          <p className={styles.subtitle}>Welcome back to EOC Portal</p>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>

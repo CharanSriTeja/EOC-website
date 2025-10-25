@@ -2,78 +2,121 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  font-family: 'Inter', 'Poppins', sans-serif;
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .title {
-  font-size: 1.875rem;
-  font-weight: bold;
-  color: #111827;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #232323;
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .editButton {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.625rem 1rem;
-  background-color: #4f46e5;
-  color: white;
+  padding: 0.75rem 1.25rem;
+  background-color: #078080;
+  color: #fffffe;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 10px;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(7, 128, 128, 0.2);
 }
 
 .editButton:hover {
-  background-color: #4338ca;
+  background-color: #056b6b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(7, 128, 128, 0.3);
+}
+
+.editButton:active {
+  transform: translateY(0);
 }
 
 .profileCard {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: #fffffe;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(35, 35, 35, 0.08);
   overflow: hidden;
+  border: 1px solid rgba(35, 35, 35, 0.05);
 }
 
 .avatarSection {
-  background: linear-gradient(to bottom right, #4f46e5, #4338ca);
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
   padding: 3rem 2rem;
   text-align: center;
-  color: white;
+  color: #fffffe;
+  position: relative;
+  overflow: hidden;
+}
+
+.avatarSection::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .avatar {
-  width: 6rem;
-  height: 6rem;
+  width: 7rem;
+  height: 7rem;
   border-radius: 50%;
-  background-color: white;
-  color: #4f46e5;
+  background-color: #fffffe;
+  color: #078080;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 2.5rem;
+  font-weight: 700;
   margin: 0 auto 1rem;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border: 4px solid rgba(255, 255, 255, 0.3);
 }
 
 .userName {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.75rem;
+  font-weight: 700;
   margin: 0 0 0.25rem 0;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.02em;
 }
 
 .userRole {
-  opacity: 0.9;
+  opacity: 0.95;
   margin: 0;
+  font-size: 1rem;
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
 }
 
 .infoSection {
@@ -97,6 +140,14 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding: 1rem;
+  background-color: #f8f5f2;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.infoItem:hover {
+  background-color: rgba(7, 128, 128, 0.05);
 }
 
 .infoLabel {
@@ -104,30 +155,46 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  font-weight: 500;
-  color: #6b7280;
+  font-weight: 600;
+  color: #222525;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.infoLabel svg {
+  color: #078080;
 }
 
 .infoValue {
-  color: #111827;
+  color: #232323;
   margin: 0;
   font-size: 1rem;
+  font-weight: 500;
 }
 
 .input,
 .textarea {
   width: 100%;
-  padding: 0.625rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
+  padding: 0.75rem;
+  border: 2px solid rgba(35, 35, 35, 0.1);
+  border-radius: 8px;
   font-size: 0.875rem;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.3s ease;
+  background-color: #fffffe;
+  color: #232323;
+  font-family: 'Inter', 'Poppins', sans-serif;
 }
 
 .input:focus,
 .textarea:focus {
-  border-color: #4f46e5;
+  border-color: #078080;
+  box-shadow: 0 0 0 4px rgba(7, 128, 128, 0.1);
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
 }
 
 .bioSection {
@@ -135,50 +202,103 @@
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f5f2;
+  border-radius: 10px;
 }
 
 .bioValue {
-  color: #4b5563;
+  color: #222525;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 0.95rem;
 }
 
 .actionButtons {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
-  padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(35, 35, 35, 0.05);
 }
 
 .cancelButton,
 .saveButton {
-  padding: 0.625rem 1.5rem;
-  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
 .cancelButton {
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: #f8f5f2;
+  color: #232323;
+  border: 2px solid rgba(35, 35, 35, 0.1);
 }
 
 .cancelButton:hover {
-  background-color: #e5e7eb;
+  background-color: rgba(35, 35, 35, 0.05);
+  border-color: rgba(35, 35, 35, 0.2);
 }
 
 .saveButton {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: #4f46e5;
-  color: white;
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
+  color: #fffffe;
+  box-shadow: 0 2px 8px rgba(7, 128, 128, 0.2);
 }
 
 .saveButton:hover {
-  background-color: #4338ca;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(7, 128, 128, 0.3);
+}
+
+.saveButton:active {
+  transform: translateY(0);
+}
+
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 1rem;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(7, 128, 128, 0.2);
+  border-top-color: #078080;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loaderText {
+  font-size: 1rem;
+  color: #078080;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  animation: fadeIn 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
 }

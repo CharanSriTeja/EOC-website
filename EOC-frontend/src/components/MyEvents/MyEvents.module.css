@@ -1,7 +1,8 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
+  font-family: 'Inter', 'Poppins', sans-serif;
 }
 
 .header {
@@ -9,28 +10,36 @@
 }
 
 .title {
-  font-size: 1.875rem;
-  font-weight: bold;
-  color: #111827;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #232323;
   margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
-  color: #4b5563;
+  color: #222525;
   margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
 }
 
 .section {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .sectionTitle {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #111827;
+  color: #232323;
   margin: 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid #078080;
+  display: inline-block;
+  letter-spacing: -0.01em;
 }
 
 .eventsGrid {
@@ -52,25 +61,74 @@
 }
 
 .emptyState {
-  background-color: #f9fafb;
-  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #fffffe 0%, #f8f5f2 100%);
+  border-radius: 14px;
   padding: 4rem 2rem;
   text-align: center;
+  border: 2px dashed rgba(7, 128, 128, 0.2);
 }
 
 .emptyIcon {
-  color: #9ca3af;
+  color: #078080;
+  opacity: 0.4;
   margin: 0 auto 1.5rem;
 }
 
 .emptyTitle {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #111827;
+  color: #232323;
   margin: 0 0 0.5rem 0;
+  letter-spacing: -0.01em;
 }
 
 .emptyText {
-  color: #6b7280;
+  color: #222525;
   margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.eventWrapper {
+  position: relative;
+}
+
+.unregisterButton {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: linear-gradient(135deg, #f45d48 0%, #e04a36 100%);
+  color: #fffffe;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(244, 93, 72, 0.25);
+  letter-spacing: 0.3px;
+}
+
+.unregisterButton:hover {
+  background: linear-gradient(135deg, #e04a36 0%, #c83d2a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(244, 93, 72, 0.4);
+}
+
+.unregisterButton:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .eventsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.25rem;
+  }
 }

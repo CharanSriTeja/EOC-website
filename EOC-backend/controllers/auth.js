@@ -103,7 +103,7 @@ export const signUp = async (req, res, next) => {
   }
 };
 
-// Sign In
+// controllers/auth.controller.js
 export const signIn = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -138,6 +138,7 @@ export const signIn = async (req, res, next) => {
       { expiresIn: process.env.JWT_EXPIRES || '7d' }
     );
 
+    // Return response matching your network response structure
     res.status(200).json({
       success: true,
       message: 'Login successful',
@@ -156,6 +157,7 @@ export const signIn = async (req, res, next) => {
     next(error);
   }
 };
+
 
 
 export const signOut = async (req,res,next) => {

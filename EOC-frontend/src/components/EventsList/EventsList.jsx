@@ -7,19 +7,41 @@ import styles from './EventsList.module.css';
 const EventsList = ({ events, registeredEventIds, onRegister }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const categories = ['All', 'Technical', 'Cultural', 'Sports', 'Workshop', 'Career'];
+  const categories = ['All', 'dance', 'hackathon', 'workshop', 'competition', 'festival', 'other'];
 
-  useEffect(() => {
-    let filtered = events.filter(e => !e.completed && new Date(e.date) >= new Date());
+  // Separate events into upcoming and past
+  const separateEvents = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcoming = [];
+    const past = [];
+
+    events.forEach(event => {
+      const eventDate = new Date(event.date);
+      eventDate.setHours(0, 0, 0, 0);
+
+      if (eventDate >= today && event.status !== 'completed') {
+        upcoming.push(event);
+      } else {
+        past.push(event);
+      }
+    });
+
+    return { upcoming, past };
+  };
+
+  const filterEvents = (eventList) => {
+    let filtered = eventList;
 
     if (searchTerm) {
       filtered = filtered.filter(e =>
-        e.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        e.description.toLowerCase().includes(searchTerm.toLowerCase())
+        e.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        e.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        e.theme?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -27,13 +49,24 @@ const EventsList = ({ events, registeredEventIds, onRegister }) => {
       filtered = filtered.filter(e => e.category === selectedCategory);
     }
 
-    setFilteredEvents(filtered);
-  }, [events, searchTerm, selectedCategory]);
+    return filtered;
+  };
 
   const handleViewDetails = (event) => {
     setSelectedEvent(event);
     setShowModal(true);
   };
+
+  const isEventRegistered = (eventId) => {
+    return registeredEventIds.some(id => {
+      const registeredId = typeof id === 'object' && id._id ? id._id : id;
+      return registeredId.toString() === eventId.toString();
+    });
+  };
+
+  const { upcoming, past } = separateEvents();
+  const filteredUpcoming = filterEvents(upcoming);
+  const filteredPast = filterEvents(past);
 
   return (
     <div className={styles.container}>
@@ -61,42 +94,62 @@ const EventsList = ({ events, registeredEventIds, onRegister }) => {
               onClick={() => setSelectedCategory(category)}
               className={`${styles.categoryButton} ${selectedCategory === category ? styles.active : ''}`}
             >
-              {category}
+              {category.charAt(0).toUpperCase() + category.slice(1)}
             </button>
           ))}
         </div>
       </div>
 
-      <div className={styles.resultsInfo}>
-        <p className={styles.resultsText}>
-          Showing {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''}
-        </p>
+      {/* Upcoming Events Section */}
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Upcoming Events</h3>
+        {filteredUpcoming.length > 0 ? (
+          <div className={styles.eventsGrid}>
+            {filteredUpcoming.map(event => (
+              <EventCard
+                key={event._id}
+                event={event}
+                isRegistered={isEventRegistered(event._id)}
+                onRegister={() => onRegister(event._id)}
+                onViewDetails={() => handleViewDetails(event)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className={styles.emptyState}>
+            <p className={styles.emptyText}>No upcoming events found</p>
+          </div>
+        )}
       </div>
 
-      {filteredEvents.length > 0 ? (
-        <div className={styles.eventsGrid}>
-          {filteredEvents.map(event => (
-            <EventCard
-              key={event.id}
-              event={event}
-              isRegistered={registeredEventIds.includes(event.id)}
-              onRegister={() => onRegister(event.id)}
-              onViewDetails={() => handleViewDetails(event)}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className={styles.emptyState}>
-          <p className={styles.emptyText}>No events found matching your criteria</p>
-        </div>
-      )}
+      {/* Past Events Section */}
+      <div className={styles.section} style={{ marginTop: '3rem' }}>
+        <h3 className={styles.sectionTitle}>Past Events</h3>
+        {filteredPast.length > 0 ? (
+          <div className={styles.eventsGrid}>
+            {filteredPast.map(event => (
+              <EventCard
+                key={event._id}
+                event={event}
+                isRegistered={isEventRegistered(event._id)}
+                onRegister={() => onRegister(event._id)}
+                onViewDetails={() => handleViewDetails(event)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className={styles.emptyState}>
+            <p className={styles.emptyText}>No past events found</p>
+          </div>
+        )}
+      </div>
 
       <EventDetailsModal
         event={selectedEvent}
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        isRegistered={selectedEvent && registeredEventIds.includes(selectedEvent.id)}
-        onRegister={() => selectedEvent && onRegister(selectedEvent.id)}
+        isRegistered={selectedEvent && isEventRegistered(selectedEvent._id)}
+        onRegister={() => selectedEvent && onRegister(selectedEvent._id)}
       />
     </div>
   );

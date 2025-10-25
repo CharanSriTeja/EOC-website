@@ -89,9 +89,26 @@ const [eventForm, setEventForm] = useState({
   registrationRequired: true, // NEW: Default to true
 });
 
-const openModal = (type, event = null) => {
+const openModal = async (type, event = null) => {
   setModalType(type);
-  setSelectedEvent(event);
+
+  if (type === 'participants' && event) {
+    // Fetch event details with populated participants for participants modal
+    try {
+      const response = await axiosInstance.get(`/events/${event._id}`);
+      if (response.data.success) {
+        setSelectedEvent(response.data.data);
+      } else {
+        console.error('Failed to fetch event details');
+        setSelectedEvent(event); // fallback to original event data
+      }
+    } catch (error) {
+      console.error('Error fetching event details:', error);
+      setSelectedEvent(event); // fallback to original event data
+    }
+  } else {
+    setSelectedEvent(event);
+  }
 
   if (type === 'add') {
     setEventForm({
@@ -106,7 +123,7 @@ const openModal = (type, event = null) => {
   } else if (type === 'edit' && event) {
     setEventForm({
       name: event.name,
-      date: event.date ? event.date.split('T')[0] : '', 
+      date: event.date ? event.date.split('T')[0] : '',
       description: event.description,
       venue: event.details?.venue || '',
       category: event.category,
@@ -218,6 +235,35 @@ const handleEditEvent = async () => {
     setShowConfirm(false);
   };
 
+  // Function to export participants to CSV
+  const exportToCSV = (participants, eventName) => {
+    if (!participants || participants.length === 0) return;
+
+    // Define CSV headers
+    const headers = ['Name', 'Email', 'Year'];
+
+    // Create CSV content
+    const csvContent = [
+      headers.join(','),
+      ...participants.map(p => [
+        `"${p.name || ''}"`,
+        `"${p.email || ''}"`,
+        `"${p.year || ''}"`
+      ].join(','))
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${eventName}_participants.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // REMOVED: handleProfileChange function
 
   const toggleSidebar = () => {
@@ -280,15 +326,16 @@ const handleEditEvent = async () => {
         {renderContent()}
       </main>
 
-      <Modal 
-        showModal={showModal} 
-        closeModal={closeModal} 
-        modalType={modalType} 
-        eventForm={eventForm} 
-        handleFormChange={handleFormChange} 
-        handleAddEvent={handleAddEvent} 
-        handleEditEvent={handleEditEvent} 
-        selectedEvent={selectedEvent} 
+      <Modal
+        showModal={showModal}
+        closeModal={closeModal}
+        modalType={modalType}
+        eventForm={eventForm}
+        handleFormChange={handleFormChange}
+        handleAddEvent={handleAddEvent}
+        handleEditEvent={handleEditEvent}
+        selectedEvent={selectedEvent}
+        exportToCSV={exportToCSV}
       />
       
       <ConfirmModal 

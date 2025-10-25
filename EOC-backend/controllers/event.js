@@ -29,6 +29,7 @@ export const getEventById = async (req, res) => {
 
 // Create event (Coordinator/Admin)
 export const createEvent = async (req, res) => {
+  console.log('Trying in backend',req.body);
   try {
     const event = new Event({ ...req.body, createdBy: req.user.id });
     await event.save();
@@ -52,16 +53,42 @@ export const editEvent = async (req, res) => {
 };
 
 // Delete event (Coordinator/Admin)
+// Backend controller example
 export const deleteEvent = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.eventId);
-    if (!event) return res.status(404).json({ success: false, message: 'Event not found' });
-    await event.remove();
-    res.json({ success: true, message: 'Event deleted successfully' });
+    const { eventId } = req.params;
+    
+    console.log('Attempting to delete event with ID:', eventId);
+    
+    // First, try to find the event
+    const event = await Event.findById(eventId);
+    console.log('Found event:', event);
+    
+    if (!event) {
+      console.log('Event not found in database');
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Event not found' 
+      });
+    }
+    
+    // Now delete it
+    await Event.findByIdAndDelete(eventId);
+    
+    console.log('Event deleted successfully');
+    res.status(200).json({ 
+      success: true, 
+      message: 'Event deleted successfully' 
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error('Delete error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
   }
 };
+
 
 // Get registrations for event (Coordinator/Admin)
 export const getEventRegistrations = async (req, res) => {

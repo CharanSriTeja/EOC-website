@@ -54,11 +54,19 @@ const CoordinatorDashboard = () => {
   const getCurrentDate = () => new Date().toISOString().split('T')[0];
 
   const getEventStatus = (eventDate) => {
-    const today = getCurrentDate();
-    if (eventDate === today) return 'ongoing';
-    if (eventDate > today) return 'upcoming';
+  // Extract just the date part (YYYY-MM-DD) from both
+  const today = new Date().toISOString().split('T')[0];
+  const eventDateOnly = new Date(eventDate).toISOString().split('T')[0];
+  
+  if (eventDateOnly === today) {
+    return 'ongoing';
+  } else if (eventDateOnly > today) {
+    return 'upcoming';
+  } else {
     return 'completed';
-  };
+  }
+};
+
 
   const categorizedEvents = events.reduce((acc, event) => {
     const status = getEventStatus(event.date);
@@ -100,7 +108,7 @@ const CoordinatorDashboard = () => {
     } else if (type === 'edit' && event) {
       setEventForm({
         name: event.name,
-        date: event.date,
+        date: event.date ? event.date.split('T')[0] : '', 
         description: event.description,
         venue: event.details?.venue || '',
         category: event.category,
@@ -123,8 +131,19 @@ const CoordinatorDashboard = () => {
   };
 
   const handleAddEvent = async () => {
+    const eventData = {
+      name: eventForm.name,
+      date: eventForm.date,
+      description: eventForm.description,
+      category: eventForm.category,
+      image: eventForm.image,
+      details: {
+        venue: eventForm.venue  // Nest venue inside details
+      }
+    };
+    console.log('Trying to add');
     try {
-      const response = await axiosInstance.post('/events', eventForm);
+      const response = await axiosInstance.post('/events', eventData);
       console.log('Trying to add');
       if (response.data.success) {
         setEvents([response.data.data, ...events]);
@@ -137,8 +156,18 @@ const CoordinatorDashboard = () => {
   };
 
   const handleEditEvent = async () => {
+    const eventData = {
+      name: eventForm.name,
+      date: eventForm.date,
+      description: eventForm.description,
+      category: eventForm.category,
+      image: eventForm.image,
+      details: {
+        venue: eventForm.venue  // Nest venue inside details
+      }
+    };
     try {
-      const response = await axiosInstance.patch(`/events/${selectedEvent._id}`, eventForm);
+      const response = await axiosInstance.patch(`/events/${selectedEvent._id}`, eventData);
       if (response.data.success) {
         setEvents(events.map(event => event._id === selectedEvent._id ? response.data.data : event));
         closeModal();
@@ -149,19 +178,30 @@ const CoordinatorDashboard = () => {
   };
 
   const handleDeleteClick = (id) => {
+    console.log('Delete clicked for ID:', id); 
     setDeletingEventId(id);
     setShowConfirm(true);
   };
 
   const confirmDelete = async () => {
-    try {
-      await axiosInstance.delete(`/events/${deletingEventId}`);
+  try {
+    const response = await axiosInstance.delete(`/events/${deletingEventId}`);
+    console.log('Delete response:', response.data); // Add this
+    
+    if (response.data.success) { // Check success flag
       setEvents(events.filter(event => event._id !== deletingEventId));
       setShowConfirm(false);
-    } catch (error) {
-      console.error('Error deleting event:', error);
+      setDeletingEventId(null);
+    } else {
+      console.error('Delete failed:', response.data.message);
+      alert('Failed to delete event');
     }
-  };
+  } catch (error) {
+    console.error('Error deleting event:', error.response?.data || error.message);
+    alert('Error deleting event: ' + (error.response?.data?.message || error.message));
+  }
+};
+
 
   const cancelDelete = () => {
     setDeletingEventId(null);

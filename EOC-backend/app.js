@@ -7,6 +7,8 @@ import connectDB from './database/mongodb.js';
 
 import authRoutes from './routes/auth.js'
 import eventRoutes from './routes/event.js';
+import userRoutes from './routes/user.js';
+
 
 import errorMiddleware from './middlewares/error.js';
 
@@ -30,7 +32,7 @@ app.get('/',(req,res)=>{
 
 app.use('/api/v1/auth',authRoutes)
 app.use('/api/v1/events',eventRoutes)
-
+app.use('/api/v1/users',userRoutes)
 
 
 app.use(errorMiddleware);

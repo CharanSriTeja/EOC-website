@@ -196,3 +196,33 @@
 .linkButton:hover {
   color: #06B6D4;
 }
+/* Add animation for year field */
+.inputGroup {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Style for warning message (if you enable coordinator warning) */
+.warning {
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #92400e;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.warning strong {
+  font-weight: 600;
+}

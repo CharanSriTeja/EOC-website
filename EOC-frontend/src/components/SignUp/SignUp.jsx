@@ -7,7 +7,9 @@ function SignUp({ setIsLoggedIn }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('student');
+  const [year, setYear] = useState('1st Year'); // NEW: Year field for students
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -15,23 +17,55 @@ function SignUp({ setIsLoggedIn }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
     setLoading(true);
 
     try {
+      // Prepare signup data
+      const signupData = {
+        name,
+        email,
+        password,
+        role,
+      };
 
-        const response = await axiosInstance.post('/auth/sign-up', { name, email, password, role });
-        console.log('SignUp response:', response);
-        const { token, user } = response.data.data;
-        localStorage.setItem('token', token);
-        setIsLoggedIn(true);
+      // Add year only if role is student
+      if (role === 'student') {
+        signupData.year = year;
+      }
 
-        if (user.role === 'student') navigate('/student-dashboard');
-        else if (user.role === 'coordinator') navigate('/coordinator-dashboard');
+      const response = await axiosInstance.post('/auth/sign-up', signupData);
+      console.log('SignUp response:', response);
+      
+      // Updated to match backend response structure
+      const { token, user } = response.data;
+      
+      localStorage.setItem('token', token);
+      setIsLoggedIn(true);
+
+      // Navigate based on role
+      if (user.role === 'student') {
+        navigate('/student-dashboard');
+      } else if (user.role === 'coordinator') {
+        navigate('/coordinator-dashboard');
+      }
 
     } catch (err) {
-        console.error('SignUp error:', err);
-        setError(err.response?.data?.message || 'Sign Up failed');
-    }finally {
+      console.error('SignUp error:', err);
+      setError(err.response?.data?.message || 'Sign Up failed');
+    } finally {
       setLoading(false);
     }
   };
@@ -50,6 +84,7 @@ function SignUp({ setIsLoggedIn }) {
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
+          {/* Full Name */}
           <div className={styles.inputGroup}>
             <label className={styles.label}>Full Name</label>
             <input 
@@ -62,6 +97,7 @@ function SignUp({ setIsLoggedIn }) {
             />
           </div>
 
+          {/* Email */}
           <div className={styles.inputGroup}>
             <label className={styles.label}>Email</label>
             <input 
@@ -74,6 +110,7 @@ function SignUp({ setIsLoggedIn }) {
             />
           </div>
 
+          {/* Password */}
           <div className={styles.inputGroup}>
             <label className={styles.label}>Password</label>
             <input 
@@ -82,10 +119,26 @@ function SignUp({ setIsLoggedIn }) {
               value={password}
               onChange={e => setPassword(e.target.value)}
               className={styles.input}
+              minLength={6}
               required 
             />
           </div>
 
+          {/* Confirm Password - NEW */}
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>Confirm Password</label>
+            <input 
+              type="password" 
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+              className={styles.input}
+              minLength={6}
+              required 
+            />
+          </div>
+
+          {/* Role */}
           <div className={styles.inputGroup}>
             <label className={styles.label}>Role</label>
             <select 
@@ -98,14 +151,35 @@ function SignUp({ setIsLoggedIn }) {
             </select>
           </div>
 
+          {/* Year - NEW: Only show for students */}
+          {role === 'student' && (
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Year</label>
+              <select 
+                value={year} 
+                onChange={e => setYear(e.target.value)}
+                className={styles.select}
+                required
+              >
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select>
+            </div>
+          )}
+
+          {/* Optional: Coordinator warning */}
           {/* {role === 'coordinator' && (
             <div className={styles.warning}>
               <strong>Note:</strong> Coordinator registration is restricted. Please contact EOC admin for access.
             </div>
           )} */}
 
+          {/* Error Message */}
           {error && <p className={styles.error}>{error}</p>}
 
+          {/* Submit Button */}
           <button 
             type="submit" 
             className={styles.submitButton}

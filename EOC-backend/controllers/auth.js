@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import { sendVerificationEmail } from '../utils/emailService.cjs';
-import { sendResetPasswordEmail } from '../utils/emailService.cjs';
+import { sendVerificationEmail } from '../utils/emailService.js';
+import { sendResetPasswordEmail } from '../utils/emailService.js';
 
 // Sign Up
 export const signUp = async (req, res, next) => {

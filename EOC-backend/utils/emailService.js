@@ -1,5 +1,5 @@
-const brevoImport = require('@getbrevo/brevo');
-const brevo = brevoImport.default || brevoImport;
+// Use 'import' instead of 'require'
+import brevo from '@getbrevo/brevo';
 
 const ApiClient = brevo.ApiClient;
 const TransactionalEmailsApi = brevo.TransactionalEmailsApi;
@@ -13,7 +13,8 @@ defaultClient.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
 
 const apiInstance = new TransactionalEmailsApi();
 
-const sendVerificationEmail = async (toEmail, verificationUrl) => {
+// Use 'export' to make functions available to other files
+export const sendVerificationEmail = async (toEmail, verificationUrl) => {
   const emailContent = {
     to: [{ email: toEmail }],
     sender: { email: process.env.SENDER_EMAIL, name: "EOC Portal" },
@@ -27,16 +28,16 @@ const sendVerificationEmail = async (toEmail, verificationUrl) => {
   };
 
   try {
-  await sendResetPasswordEmail(email, resetUrl);
-} catch (emailError) {
-  return res.status(500).json({ success: false, message: 'Failed to send reset email' });
-}
-
-res.json({ success: true, message: 'Password reset email sent!' });
-
+    await apiInstance.sendTransacEmail(emailContent);
+    console.log(`✅ Verification email sent to ${toEmail}`);
+  } catch (error) {
+    console.error("❌ Error sending verification email:", error.message);
+    throw new Error('Failed to send verification email.');
+  }
 };
 
-const sendResetPasswordEmail = async (email, resetUrl) => {
+// Use 'export' here as well
+export const sendResetPasswordEmail = async (email, resetUrl) => {
   const emailContent = {
     to: [{ email }],
     sender: { email: process.env.SENDER_EMAIL, name: "EOC Support" },
@@ -54,10 +55,8 @@ const sendResetPasswordEmail = async (email, resetUrl) => {
     console.log(`✅ Password reset email sent to ${email}`);
   } catch (error) {
     console.error("❌ Error sending reset password email:", error.message);
+    throw new Error('Failed to send reset password email.');
   }
 };
 
-module.exports = {
-  sendVerificationEmail,
-  sendResetPasswordEmail,
-};
+// We no longer need 'module.exports' at the end

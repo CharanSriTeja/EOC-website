@@ -1,5 +1,5 @@
 // Use 'import' instead of 'require'
-import brevo from '@getbrevo/brevo';
+import * as brevo from '@getbrevo/brevo';
 
 const ApiClient = brevo.ApiClient;
 const TransactionalEmailsApi = brevo.TransactionalEmailsApi;

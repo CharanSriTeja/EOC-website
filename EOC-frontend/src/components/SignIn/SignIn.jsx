@@ -130,7 +130,7 @@ const handleResendVerification = async () => {
 
           {error && <p className={styles.error}>{error}</p>}
           
-          {error && (
+          {/* {error && (
               <>
                 <p className={styles.error}>{error}</p>
 
@@ -144,7 +144,7 @@ const handleResendVerification = async () => {
                   </button>
                 )}
               </>
-            )}
+            )} */}
 
 
           <button 
@@ -154,7 +154,7 @@ const handleResendVerification = async () => {
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
-          <p className={styles.forgotPassword}>
+          {/* <p className={styles.forgotPassword}>
 
           <button 
             type="button" 
@@ -163,7 +163,7 @@ const handleResendVerification = async () => {
           >
             Forgot Password?
           </button>
-        </p>
+        </p> */}
 
         </form>
         <p className={styles.footerText}>

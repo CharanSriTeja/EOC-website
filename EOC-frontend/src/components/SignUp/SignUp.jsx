@@ -52,7 +52,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
       const response = await axiosInstance.post('/auth/sign-up', signupData);
       // After calling signup API successfully
-      navigate('/verify-email');  // Redirect user to verification info page
+      // navigate('/verify-email');  // Redirect user to verification info page
 
       console.log('SignUp response:', response);
       

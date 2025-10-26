@@ -1,20 +1,24 @@
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ component: Component, role: Role ,...rest}) => {
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem('token');
   if (!token) {
-    // No token, redirect to sign-in
     return <Navigate to="/signin" />;
   }
 
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  if (payload.role !== Role) {
-    // Role doesn't match, redirect to home or sign-in
+  let payload = null;
+  try {
+    payload = JSON.parse(atob(token.split('.')[1]));
+  } catch {
+    return <Navigate to="/signin" />;
+  }
+
+  if (!allowedRoles.includes(payload.role)) {
     return <Navigate to="/" />;
   }
 
-  // Role matches, render component
-  return <Component {...rest}/>;
+  // Role matches, render children
+  return children;
 };
 
 export default ProtectedRoute;

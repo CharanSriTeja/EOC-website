@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['student', 'coordinator'],
+    enum: ['student', 'coordinator','admin'],
     required: true,
   },
   // Student-specific fields
@@ -52,6 +52,11 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Event" 
   }],
+  isVerified: {
+  type: Boolean,
+  default: false,
+  }
+
 }, { 
   timestamps: true 
 }); 

@@ -201,3 +201,35 @@
   color: #056b6b;
   text-decoration-color: #078080;
 }
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.2s ease;
+}
+
+.eyeIcon:hover {
+  color: var(--color-primary, #667eea);
+}
+
+.input {
+  width: 100%;
+  padding: 10px 40px 10px 12px; /* extra space for eye icon */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  border-color: var(--color-primary, #667eea);
+  background-color: #fff;
+}

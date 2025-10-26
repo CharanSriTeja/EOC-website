@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axiosInstance from "../../api/axiosInstance.jsx";
 import { useNavigate } from 'react-router-dom';
 import styles from './SignUp.module.css';
+import { Eye, EyeOff } from "lucide-react";
 
 function SignUp({ setIsLoggedIn }) {
   const [name, setName] = useState('');
@@ -12,6 +13,9 @@ function SignUp({ setIsLoggedIn }) {
   const [year, setYear] = useState('1st Year'); // NEW: Year field for students
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -47,6 +51,9 @@ function SignUp({ setIsLoggedIn }) {
       }
 
       const response = await axiosInstance.post('/auth/sign-up', signupData);
+      // After calling signup API successfully
+      navigate('/verify-email');  // Redirect user to verification info page
+
       console.log('SignUp response:', response);
       
       // Updated to match backend response structure
@@ -112,32 +119,47 @@ function SignUp({ setIsLoggedIn }) {
 
           {/* Password */}
           <div className={styles.inputGroup}>
-            <label className={styles.label}>Password</label>
-            <input 
-              type="password" 
-              placeholder="••••••••"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className={styles.input}
-              minLength={6}
-              required 
-            />
-          </div>
+  <label className={styles.label}>Password</label>
+  <div className={styles.passwordWrapper}>
+    <input 
+      type={showPassword ? "text" : "password"}
+      placeholder="••••••••"
+      value={password}
+      onChange={e => setPassword(e.target.value)}
+      className={styles.input}
+      minLength={6}
+      required 
+    />
+    <span 
+      className={styles.eyeIcon} 
+      onClick={() => setShowPassword(!showPassword)}
+    >
+      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+    </span>
+  </div>
+</div>
 
-          {/* Confirm Password - NEW */}
-          <div className={styles.inputGroup}>
-            <label className={styles.label}>Confirm Password</label>
-            <input 
-              type="password" 
-              placeholder="••••••••"
-              value={confirmPassword}
-              onChange={e => setConfirmPassword(e.target.value)}
-              className={styles.input}
-              minLength={6}
-              required 
-            />
-          </div>
-
+{/* Confirm Password */}
+<div className={styles.inputGroup}>
+  <label className={styles.label}>Confirm Password</label>
+  <div className={styles.passwordWrapper}>
+    <input 
+      type={showConfirmPassword ? "text" : "password"}
+      placeholder="••••••••"
+      value={confirmPassword}
+      onChange={e => setConfirmPassword(e.target.value)}
+      className={styles.input}
+      minLength={6}
+      required 
+    />
+    <span 
+      className={styles.eyeIcon} 
+      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+    >
+      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+    </span>
+  </div>
+</div>
           {/* Role */}
           <div className={styles.inputGroup}>
             <label className={styles.label}>Role</label>
@@ -170,11 +192,11 @@ function SignUp({ setIsLoggedIn }) {
           )}
 
           {/* Optional: Coordinator warning */}
-          {/* {role === 'coordinator' && (
+          {role === 'coordinator' && (
             <div className={styles.warning}>
               <strong>Note:</strong> Coordinator registration is restricted. Please contact EOC admin for access.
             </div>
-          )} */}
+          )}
 
           {/* Error Message */}
           {error && <p className={styles.error}>{error}</p>}
@@ -183,7 +205,7 @@ function SignUp({ setIsLoggedIn }) {
           <button 
             type="submit" 
             className={styles.submitButton}
-            disabled={loading}
+            disabled={loading || role === 'coordinator'}  // disable if loading or coordinator selected
           >
             {loading ? 'Signing Up...' : 'Sign Up'}
           </button>

@@ -2,60 +2,77 @@ import React, { useState } from 'react';
 import axiosInstance from "../../api/axiosInstance.jsx";
 import { useNavigate } from 'react-router-dom';
 import styles from './SignIn.module.css';
+import { Eye, EyeOff } from "lucide-react";
+
 
 function SignIn({ setIsLoggedIn }) {
+  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+
+
+const handleResendVerification = async () => {
+  try {
+    if (!email) {
+      alert('Please enter your email to resend verification.');
+      return;
+    }
+
+    await axiosInstance.post('/auth/resend-verification', { email });
+    alert('Verification email resent! Please check your inbox.');
+  } catch (error) {
+    console.error('Resend verification error:', error);
+    alert(error.response?.data?.message || 'Failed to resend verification email.');
+  }
+};
+
+ const handleSubmit = async (e) => {
   e.preventDefault();
   setError('');
   setLoading(true);
 
   try {
-    console.log('Sending request with:', { email, password }); // Debug
-    
-    const response = await axiosInstance.post('/auth/sign-in', { 
-      email, 
-      password 
-    });
-    
-    console.log('Full response:', response); // Debug
-    console.log('Response data:', response.data); // Debug
-    console.log('Success flag:', response.data.success); // Debug
-    console.log('Token:', response.data.token); // Debug
-    console.log('User:', response.data.user); // Debug
+    const response = await axiosInstance.post('/auth/sign-in', { email, password });
+  
+  if (response.data && response.data.success) {
+    const { token, user } = response.data;
+    console.log(user.role) 
+    localStorage.setItem('token', token);
+    setIsLoggedIn(true);
 
-    if (response.data && response.data.success) {
-      const { token, user } = response.data;
-      
-      console.log('Storing token...'); // Debug
-      localStorage.setItem('token', token);
-      
-      console.log('Token stored:', localStorage.getItem('token')); // Debug
-      
-      setIsLoggedIn(true);
+    if (user.role === 'admin') {
+  navigate('/admin');
+} else if (user.role === 'student') {
+  navigate('/student-dashboard');
+} else if (user.role === 'coordinator') {
+  navigate('/coordinator-dashboard');
+} else {
+  navigate('/'); // fallback route if no role matched
+}
 
-      console.log('Navigating to:', user.role === 'student' ? '/student-dashboard' : '/coordinator-dashboard'); // Debug
-
-      if (user.role === 'student') {
-        navigate('/student-dashboard');
-      } else if (user.role === 'coordinator') {
-        navigate('/coordinator-dashboard');
-      }
-    }
-
-  } catch (err) {
-    console.error('SignIn error:', err); // Debug
-    console.error('Error response:', err.response); // Debug
-    setError(err.response?.data?.message || 'Sign in failed');
-  } finally {
-    setLoading(false);
   }
+  }catch (err) {
+  console.error('SignIn error:', err);
+  
+  // Safely check error message
+  const message = err.response?.data?.message || '';
+  
+  if (
+    err.response &&
+    (err.response.status === 403 || message.toLowerCase().includes('verify'))
+  ) {
+    setError('Your email is not verified. Please check your email and verify your account.');
+  } else {
+    setError(message || 'Sign in failed');
+  }
+}
+
 };
+
 
 
   return (
@@ -85,18 +102,50 @@ function SignIn({ setIsLoggedIn }) {
           </div>
 
           <div className={styles.inputGroup}>
-            <label className={styles.label}>Password</label>
-            <input 
-              type="password" 
-              placeholder="••••••••"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className={styles.input}
-              required 
-            />
-          </div>
+      <label className={styles.label}>Password</label>
+      <div className={styles.passwordWrapper}>
+        <input
+          type={showPassword ? "text" : "password"}
+          placeholder="••••••••"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className={styles.input}
+          required
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className={styles.eyeButton}
+          aria-label={showPassword ? "Hide password" : "Show password"}
+        >
+          {showPassword ? (
+            <EyeOff size={20} className={styles.eyeIcon} />
+          ) : (
+            <Eye size={20} className={styles.eyeIcon} />
+          )}
+        </button>
+      </div>
+    </div>
+
 
           {error && <p className={styles.error}>{error}</p>}
+          
+          {error && (
+              <>
+                <p className={styles.error}>{error}</p>
+
+                {error.toLowerCase().includes('verify') && (
+                  <button 
+                    type="button"
+                    onClick={handleResendVerification}
+                    className={styles.resendButton}
+                  >
+                    Resend Verification Email
+                  </button>
+                )}
+              </>
+            )}
+
 
           <button 
             type="submit" 
@@ -105,8 +154,18 @@ function SignIn({ setIsLoggedIn }) {
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
-        </form>
+          <p className={styles.forgotPassword}>
 
+          <button 
+            type="button" 
+            onClick={() => navigate('/forgot-password')} 
+            className={styles.linkButtonF}
+          >
+            Forgot Password?
+          </button>
+        </p>
+
+        </form>
         <p className={styles.footerText}>
           Don't have an account? 
           <button 

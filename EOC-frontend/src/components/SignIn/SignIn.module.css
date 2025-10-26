@@ -10,6 +10,60 @@
   font-family: 'Inter', 'Poppins', sans-serif;
 }
 
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text, #333);
+}
+
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 0.8rem 2.8rem 0.8rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  border-color: var(--color-primary, #667eea);
+  box-shadow: 0 0 8px rgba(102, 126, 234, 0.3);
+  outline: none;
+}
+
+.eyeButton {
+  position: absolute;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.eyeButton:hover {
+  transform: scale(1.1);
+}
+
+.eyeIcon {
+  color: var(--color-primary-dark, #5a67d8);
+}
+
 .backgroundBlur {
   position: absolute;
   inset: 0;
@@ -184,7 +238,21 @@
   font-size: 0.875rem;
 }
 
+.linkButtonF {
+  font-size: 15px;
+  background: none;
+  border: none;
+  color: #078080;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 0.25rem;
+  transition: all 0.3s ease;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+}
 .linkButton {
+  font-size: 20px;
   background: none;
   border: none;
   color: #078080;
@@ -200,4 +268,21 @@
 .linkButton:hover {
   color: #056b6b;
   text-decoration-color: #078080;
+}
+
+.resendButton {
+  margin-top: 1rem;
+  background: linear-gradient(135deg, #078080 0%, #056b6b 100%);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.resendButton:hover {
+  background: linear-gradient(135deg, #056b6b 0%, #034848 100%);
+  transform: translateY(-2px);
 }

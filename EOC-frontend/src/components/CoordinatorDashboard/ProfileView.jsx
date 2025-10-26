@@ -68,11 +68,10 @@ const ProfileView = () => {
 
   if (loading) {
     return (
-      <div className={styles.viewContainer}>
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
-          Loading profile...
-        </div>
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        <div className="spinner"></div>
       </div>
+
     );
   }
 

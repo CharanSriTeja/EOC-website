@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://eoc-website.vercel.app/api/v1', // Update to your backend URL
+  baseURL: 'https://eoc-website.onrender.com/api/v1', // Update to your backend URL
   headers: {
     'Content-Type': 'application/json',
   },

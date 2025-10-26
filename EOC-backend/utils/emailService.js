@@ -1,19 +1,12 @@
-// Use 'import' instead of 'require'
-import * as brevo from '@getbrevo/brevo';
+// Try this import syntax instead:
+import SibApiV3Sdk from '@getbrevo/brevo';
 
-const ApiClient = brevo.ApiClient;
-const TransactionalEmailsApi = brevo.TransactionalEmailsApi;
-
-if (!ApiClient || !TransactionalEmailsApi) {
-    throw new Error("Failed to load Brevo SDK classes.");
-}
-
-const defaultClient = ApiClient.instance;
+// Then access the classes from the imported module:
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
 defaultClient.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
 
-const apiInstance = new TransactionalEmailsApi();
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-// Use 'export' to make functions available to other files
 export const sendVerificationEmail = async (toEmail, verificationUrl) => {
   const emailContent = {
     to: [{ email: toEmail }],
@@ -36,7 +29,6 @@ export const sendVerificationEmail = async (toEmail, verificationUrl) => {
   }
 };
 
-// Use 'export' here as well
 export const sendResetPasswordEmail = async (email, resetUrl) => {
   const emailContent = {
     to: [{ email }],
@@ -58,5 +50,3 @@ export const sendResetPasswordEmail = async (email, resetUrl) => {
     throw new Error('Failed to send reset password email.');
   }
 };
-
-// We no longer need 'module.exports' at the end

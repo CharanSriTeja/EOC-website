@@ -1,11 +1,13 @@
 const brevo = require('@getbrevo/brevo');
 
-// Initialize the API instance
-const apiInstance = new brevo.TransactionalEmailsApi();
+const ApiClient = brevo.ApiClient;
+const TransactionalEmailsApi = brevo.TransactionalEmailsApi;
 
-// Configure API key authorization
-apiInstance.authentications = apiInstance.authentications || {};
-apiInstance.authentications['api-key'] = { apiKey: process.env.BREVO_API_KEY };
+const defaultClient = ApiClient.instance;
+defaultClient.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
+
+const apiInstance = new TransactionalEmailsApi();
+
 
 const sendVerificationEmail = async (toEmail, verificationUrl) => {
   const emailContent = {
@@ -21,11 +23,13 @@ const sendVerificationEmail = async (toEmail, verificationUrl) => {
   };
 
   try {
-    await apiInstance.sendTransacEmail(emailContent);
-    console.log(`✅ Verification email sent to ${toEmail}`);
-  } catch (error) {
-    console.error("❌ Error sending verification email:", error.message);
-  }
+  await sendResetPasswordEmail(email, resetUrl);
+} catch (emailError) {
+  return res.status(500).json({ success: false, message: 'Failed to send reset email' });
+}
+
+res.json({ success: true, message: 'Password reset email sent!' });
+
 };
 
 const sendResetPasswordEmail = async (email, resetUrl) => {

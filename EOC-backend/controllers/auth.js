@@ -63,7 +63,7 @@ export const signUp = async (req, res, next) => {
     );
     console.log("[signUp] Verification token generated");
 
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${verifyToken}`;
+    const verificationUrl = `${process.env.FRONTEND_URL}/#/verify-email/${verifyToken}`;
     await sendVerificationEmail(email, verificationUrl);
     console.log("[signUp] Verification email sent");
 

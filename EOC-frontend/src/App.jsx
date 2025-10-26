@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 import EOCLandingPage from './components/EOCLandingPage/EOCLandingPage.jsx';
 import SignIn from './components/SignIn/SignIn.jsx';

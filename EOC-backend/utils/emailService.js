@@ -1,4 +1,10 @@
 export const sendVerificationEmail = async (toEmail, verificationUrl) => {
+  // Debug logging
+  console.log('🔍 Checking environment variables:');
+  console.log('BREVO_API_KEY exists:', !!process.env.BREVO_API_KEY);
+  console.log('BREVO_API_KEY length:', process.env.BREVO_API_KEY?.length);
+  console.log('SENDER_EMAIL:', process.env.SENDER_EMAIL);
+
   const emailData = {
     sender: { 
       name: "EOC Portal", 
@@ -31,7 +37,8 @@ export const sendVerificationEmail = async (toEmail, verificationUrl) => {
       throw new Error(`Brevo API error: ${errorData.message || response.statusText}`);
     }
 
-    console.log(`✅ Verification email sent to ${toEmail}`);
+    const result = await response.json();
+    console.log(`✅ Verification email sent to ${toEmail}`, result);
   } catch (error) {
     console.error('❌ Error sending verification email:', error.message);
     throw new Error('Failed to send verification email.');
@@ -71,7 +78,8 @@ export const sendResetPasswordEmail = async (email, resetUrl) => {
       throw new Error(`Brevo API error: ${errorData.message || response.statusText}`);
     }
 
-    console.log(`✅ Password reset email sent to ${email}`);
+    const result = await response.json();
+    console.log(`✅ Password reset email sent to ${email}`, result);
   } catch (error) {
     console.error('❌ Error sending reset password email:', error.message);
     throw new Error('Failed to send reset password email.');

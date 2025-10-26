@@ -33,6 +33,9 @@ app.use('/api/v1/auth',authRoutes)
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/events',eventRoutes)
 app.use('/api/v1/users',userRoutes)
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
+});
 
 
 app.use(errorMiddleware);

@@ -18,7 +18,7 @@ import errorMiddleware from './middlewares/error.js';
 
 
 const app = express()
-
+app.use(express.json());
 app.use(cors({ origin: "https://eoc-website.vercel.app" }));
 
 app.get('/',(req,res)=>{

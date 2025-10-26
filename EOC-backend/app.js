@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,
+  origin: 'https://eoc-website.vercel.app',
   credentials: true,
 };
 

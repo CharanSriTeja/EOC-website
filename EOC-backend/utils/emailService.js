@@ -1,6 +1,7 @@
-import brevo from '@getbrevo/brevo';
+import { ApiClient, TransactionalEmailsApi } from '@getbrevo/brevo';
 
-const defaultClient = brevo.ApiClient.instance;
+const defaultClient = ApiClient.instance;
+
 const apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.BREVO_API_KEY;
 

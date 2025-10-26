@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import styles from './VerifyEmailToken.module.css';
+import axiosInstance from '../../api/axiosInstance.jsx';
+
 
 const VerifyEmailToken = () => {
   const { token } = useParams();
@@ -12,7 +13,7 @@ const VerifyEmailToken = () => {
   useEffect(() => {
     const verify = async () => {
       try {
-        await axios.get(`/api/auth/verify-email/${token}`);
+        await axiosInstance.get(`/auth/verify-email/${token}`);
         setStatus('✅ Email verified successfully! Redirecting to login...');
         setStatusType('success');
         setTimeout(() => navigate('/signin'), 3000);

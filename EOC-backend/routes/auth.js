@@ -13,7 +13,7 @@ authRouter.post('/forgot-password', forgotPassword);
 
 authRouter.post('/reset-password/:token', resetPassword);
 
-authRouter.post('/verify-email',verifyEmail);
+authRouter.get('/verify-email/:token', verifyEmail);
 
 authRouter.post('/resend-verification', resendVerificationEmail);
 

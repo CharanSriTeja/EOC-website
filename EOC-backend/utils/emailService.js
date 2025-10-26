@@ -1,11 +1,12 @@
-import { ApiClient, TransactionalEmailsApi } from '@getbrevo/brevo';
+import brevo from '@getbrevo/brevo';
+
+const { ApiClient, TransactionalEmailsApi } = brevo;
 
 const defaultClient = ApiClient.instance;
-
 const apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.BREVO_API_KEY;
 
-const transactionalEmailApi = new brevo.TransactionalEmailsApi();
+const transactionalEmailsApi = new TransactionalEmailsApi();
 
 export const sendVerificationEmail = async (toEmail, verificationUrl) => {
   const emailContent = {
@@ -20,9 +21,8 @@ export const sendVerificationEmail = async (toEmail, verificationUrl) => {
     `,
   };
 
-  await transactionalEmailApi.sendTransacEmail(emailContent);
+  await transactionalEmailsApi.sendTransacEmail(emailContent);
 };
-
 
 export const sendResetPasswordEmail = async (email, resetUrl) => {
   const emailContent = {
@@ -32,5 +32,5 @@ export const sendResetPasswordEmail = async (email, resetUrl) => {
     htmlContent: `<p>Click <a href="${resetUrl}">here</a> to reset your password. This link expires in 30 minutes.</p>`,
   };
 
-  await transactionalEmailApi.sendTransacEmail(emailContent);
+  await transactionalEmailsApi.sendTransacEmail(emailContent);
 };

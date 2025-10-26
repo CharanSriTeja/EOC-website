@@ -99,9 +99,17 @@ export const signIn = async (req, res, next) => {
 
     const user = await User.findOne({ email }).select('+password');
     console.log("[signIn] Found user:", user);
+
     if (!user) {
       const error = new Error('Invalid email or password');
       error.statusCode = 401;
+      throw error;
+    }
+
+    // Add verification check here
+    if (!user.isVerified) {
+      const error = new Error('Email not verified. Please verify your email before logging in.');
+      error.statusCode = 403; // Forbidden
       throw error;
     }
 
@@ -138,6 +146,7 @@ export const signIn = async (req, res, next) => {
     next(error);
   }
 };
+
 
 
 export const signOut = async (req,res,next) => {

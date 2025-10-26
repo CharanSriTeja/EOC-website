@@ -1,13 +1,18 @@
 const brevo = require('@getbrevo/brevo');
 
-const ApiClient = brevo.ApiClient;
-const TransactionalEmailsApi = brevo.TransactionalEmailsApi;
+// Access classes via brevo object
+const ApiClient = brevo.ApiClient || brevo.default?.ApiClient;
+const TransactionalEmailsApi = brevo.TransactionalEmailsApi || brevo.default?.TransactionalEmailsApi;
+
+// Defensive checks
+if (!ApiClient || !TransactionalEmailsApi) {
+  throw new Error("Failed to load Brevo SDK classes.");
+}
 
 const defaultClient = ApiClient.instance;
 defaultClient.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
 
 const apiInstance = new TransactionalEmailsApi();
-
 
 const sendVerificationEmail = async (toEmail, verificationUrl) => {
   const emailContent = {

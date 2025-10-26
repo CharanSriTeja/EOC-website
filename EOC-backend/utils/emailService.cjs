@@ -1,6 +1,7 @@
-import brevo from '@getbrevo/brevo';
+const brevo = require('@getbrevo/brevo');
 
-const { ApiClient, TransactionalEmailsApi } = brevo;
+const ApiClient = brevo.ApiClient;
+const TransactionalEmailsApi = brevo.TransactionalEmailsApi;
 
 const defaultClient = ApiClient.instance;
 const apiKey = defaultClient.authentications['api-key'];
@@ -8,7 +9,7 @@ apiKey.apiKey = process.env.BREVO_API_KEY;
 
 const transactionalEmailsApi = new TransactionalEmailsApi();
 
-export const sendVerificationEmail = async (toEmail, verificationUrl) => {
+const sendVerificationEmail = async (toEmail, verificationUrl) => {
   const emailContent = {
     to: [{ email: toEmail }],
     sender: { email: process.env.SENDER_EMAIL, name: "EOC Portal" },
@@ -24,7 +25,7 @@ export const sendVerificationEmail = async (toEmail, verificationUrl) => {
   await transactionalEmailsApi.sendTransacEmail(emailContent);
 };
 
-export const sendResetPasswordEmail = async (email, resetUrl) => {
+const sendResetPasswordEmail = async (email, resetUrl) => {
   const emailContent = {
     to: [{ email }],
     sender: { email: process.env.SENDER_EMAIL, name: "EOC Support" },
@@ -33,4 +34,9 @@ export const sendResetPasswordEmail = async (email, resetUrl) => {
   };
 
   await transactionalEmailsApi.sendTransacEmail(emailContent);
+};
+
+module.exports = {
+  sendVerificationEmail,
+  sendResetPasswordEmail,
 };

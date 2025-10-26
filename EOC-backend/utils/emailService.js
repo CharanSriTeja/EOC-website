@@ -1,22 +1,12 @@
-import nodemailer from 'nodemailer';
-
-// Create transporter using Brevo SMTP
-const transporter = nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com',
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.BREVO_SMTP_USER || process.env.SENDER_EMAIL,
-    pass: process.env.BREVO_API_KEY, // Use your Brevo SMTP key
-  },
-});
-
 export const sendVerificationEmail = async (toEmail, verificationUrl) => {
-  const mailOptions = {
-    from: `"EOC Portal" <${process.env.SENDER_EMAIL}>`,
-    to: toEmail,
-    subject: 'Verify your EOC Portal Email',
-    html: `
+  const emailData = {
+    sender: { 
+      name: "EOC Portal", 
+      email: process.env.SENDER_EMAIL 
+    },
+    to: [{ email: toEmail }],
+    subject: "Verify your EOC Portal Email",
+    htmlContent: `
       <h2>Email Verification</h2>
       <p>Click below to verify your email:</p>
       <a href="${verificationUrl}" style="color:blue;text-decoration:underline;">Verify Email</a>
@@ -25,7 +15,22 @@ export const sendVerificationEmail = async (toEmail, verificationUrl) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': process.env.BREVO_API_KEY,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(emailData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('❌ Brevo API Error:', errorData);
+      throw new Error(`Brevo API error: ${errorData.message || response.statusText}`);
+    }
+
     console.log(`✅ Verification email sent to ${toEmail}`);
   } catch (error) {
     console.error('❌ Error sending verification email:', error.message);
@@ -34,11 +39,14 @@ export const sendVerificationEmail = async (toEmail, verificationUrl) => {
 };
 
 export const sendResetPasswordEmail = async (email, resetUrl) => {
-  const mailOptions = {
-    from: `"EOC Support" <${process.env.SENDER_EMAIL}>`,
-    to: email,
-    subject: 'Reset Your EOC Password',
-    html: `
+  const emailData = {
+    sender: { 
+      name: "EOC Support", 
+      email: process.env.SENDER_EMAIL 
+    },
+    to: [{ email }],
+    subject: "Reset Your EOC Password",
+    htmlContent: `
       <h3>Password Reset Request</h3>
       <p>Click the link below to reset your password:</p>
       <a href="${resetUrl}" style="color:red;text-decoration:underline;">Reset Password</a>
@@ -47,7 +55,22 @@ export const sendResetPasswordEmail = async (email, resetUrl) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': process.env.BREVO_API_KEY,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(emailData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('❌ Brevo API Error:', errorData);
+      throw new Error(`Brevo API error: ${errorData.message || response.statusText}`);
+    }
+
     console.log(`✅ Password reset email sent to ${email}`);
   } catch (error) {
     console.error('❌ Error sending reset password email:', error.message);

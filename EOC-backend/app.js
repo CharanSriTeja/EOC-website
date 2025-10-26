@@ -7,7 +7,7 @@ const corsOptions = {
   origin: process.env.FRONTEND_URL,
   credentials: true,
 };
-app.use(cors(corsOptions));
+
 
 
 import connectDB from './database/mongodb.js';
@@ -24,10 +24,7 @@ import errorMiddleware from './middlewares/error.js';
 
 const app = express()
 
-app.use(cors());
-app.use(express.json())
-
-
+app.use(cors(corsOptions));
 app.get('/',(req,res)=>{
     res.status(200).json({
         'data':'Welcome to EOC backend routes'

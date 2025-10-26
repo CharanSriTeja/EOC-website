@@ -191,7 +191,7 @@ export const resendVerificationEmail = async (req, res) => {
     // Generate a new verification token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '30m' });
 
-    const verificationUrl = `${process.env.FRONTEND_URL}/#/verify-email/${verifyToken}`;
+    const verificationUrl = `${process.env.FRONTEND_URL}/#/verify-email/${token}`;
     await sendVerificationEmail(email, verificationUrl);
 
     res.json({ success: true, message: 'Verification email resent successfully!' });

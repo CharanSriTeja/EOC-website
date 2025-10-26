@@ -1,13 +1,11 @@
-// Try this import syntax instead:
-import SibApiV3Sdk from '@getbrevo/brevo';
+const SibApiV3Sdk = require('@getbrevo/brevo');
 
-// Then access the classes from the imported module:
 const defaultClient = SibApiV3Sdk.ApiClient.instance;
 defaultClient.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-export const sendVerificationEmail = async (toEmail, verificationUrl) => {
+const sendVerificationEmail = async (toEmail, verificationUrl) => {
   const emailContent = {
     to: [{ email: toEmail }],
     sender: { email: process.env.SENDER_EMAIL, name: "EOC Portal" },
@@ -29,7 +27,7 @@ export const sendVerificationEmail = async (toEmail, verificationUrl) => {
   }
 };
 
-export const sendResetPasswordEmail = async (email, resetUrl) => {
+const sendResetPasswordEmail = async (email, resetUrl) => {
   const emailContent = {
     to: [{ email }],
     sender: { email: process.env.SENDER_EMAIL, name: "EOC Support" },
@@ -49,4 +47,9 @@ export const sendResetPasswordEmail = async (email, resetUrl) => {
     console.error("❌ Error sending reset password email:", error.message);
     throw new Error('Failed to send reset password email.');
   }
+};
+
+module.exports = {
+  sendVerificationEmail,
+  sendResetPasswordEmail
 };

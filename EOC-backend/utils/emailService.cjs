@@ -1,12 +1,11 @@
-const brevo = require('@getbrevo/brevo');
+const brevoImport = require('@getbrevo/brevo');
+const brevo = brevoImport.default || brevoImport;
 
-// Access classes via brevo object
-const ApiClient = brevo.ApiClient || brevo.default?.ApiClient;
-const TransactionalEmailsApi = brevo.TransactionalEmailsApi || brevo.default?.TransactionalEmailsApi;
+const ApiClient = brevo.ApiClient;
+const TransactionalEmailsApi = brevo.TransactionalEmailsApi;
 
-// Defensive checks
 if (!ApiClient || !TransactionalEmailsApi) {
-  throw new Error("Failed to load Brevo SDK classes.");
+    throw new Error("Failed to load Brevo SDK classes.");
 }
 
 const defaultClient = ApiClient.instance;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import EventCard from '../EventCard/EventCard';
 import EventDetailsModal from '../EventDetailsModal/EventDetailsModal';
 import { Search } from 'lucide-react';
@@ -10,7 +10,14 @@ const EventsList = ({ events, registeredEventIds, onRegister }) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const categories = ['All', 'dance', 'hackathon', 'workshop', 'competition', 'festival', 'other'];
+  const categories = [
+    'All', 'dance', 'hackathon', 'workshop', 'competition', 
+    'festival', 'other',
+    'Cultural & Sports Fest', 'National Festival',
+    'Academic & Cultural Support', 'Health & Social Welfare',
+    'Wellness & Personal Development', 'Academic Workshop', 
+    'Project Exhibition'
+  ];
 
   // Separate events into upcoming and past
   const separateEvents = () => {
@@ -144,6 +151,7 @@ const EventsList = ({ events, registeredEventIds, onRegister }) => {
         )}
       </div>
 
+      {/* Modal for Event Details */}
       <EventDetailsModal
         event={selectedEvent}
         isOpen={showModal}

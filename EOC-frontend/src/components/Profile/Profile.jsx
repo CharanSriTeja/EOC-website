@@ -152,7 +152,7 @@ const Profile = () => {
                   type="email"
                   name="email"
                   value={formData.email}
-                  onChange={handleChange}
+                  readOnly
                   className={styles.input}
                   required
                 />

@@ -6,10 +6,10 @@ const EventCard = ({ event, isRegistered, onRegister, onViewDetails }) => {
   // Format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
     });
   };
 
@@ -17,16 +17,12 @@ const EventCard = ({ event, isRegistered, onRegister, onViewDetails }) => {
   const isRegistrationOpen = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const eventDate = new Date(event.date);
     eventDate.setHours(0, 0, 0, 0);
-    
-    // Registration is open if:
-    // 1. Event requires registration
-    // 2. Event date is today or in the future
-    // 3. Event status is not completed
-    return event.registrationRequired && 
-           eventDate >= today && 
+
+    return event.registrationRequired &&
+           eventDate >= today &&
            event.status !== 'completed';
   };
 
@@ -56,17 +52,17 @@ const EventCard = ({ event, isRegistered, onRegister, onViewDetails }) => {
     <div className={styles.card}>
       {/* Event Image */}
       <div className={styles.imageContainer}>
-        <img 
-          src={event.image || 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=360'} 
+        <img
+          src={event.image || 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=360'}
           alt={event.name}
           className={styles.image}
           onError={(e) => {
             e.target.src = 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=360';
           }}
         />
-        
+
         {/* Category Badge */}
-        <div 
+        <div
           className={styles.categoryBadge}
           style={{ backgroundColor: getCategoryColor(event.category) }}
         >
@@ -89,7 +85,7 @@ const EventCard = ({ event, isRegistered, onRegister, onViewDetails }) => {
       {/* Event Content */}
       <div className={styles.content}>
         <h3 className={styles.title}>{event.name}</h3>
-        
+
         {event.theme && (
           <p className={styles.theme}>{event.theme}</p>
         )}
@@ -121,7 +117,7 @@ const EventCard = ({ event, isRegistered, onRegister, onViewDetails }) => {
         </div>
 
         <div className={styles.actions}>
-          <button 
+          <button
             className={styles.detailsButton}
             onClick={onViewDetails}
           >
@@ -132,14 +128,14 @@ const EventCard = ({ event, isRegistered, onRegister, onViewDetails }) => {
           {event.registrationRequired ? (
             registrationOpen ? (
               !isRegistered ? (
-                <button 
+                <button
                   className={styles.registerButton}
                   onClick={onRegister}
                 >
                   Register
                 </button>
               ) : (
-                <button 
+                <button
                   className={`${styles.registerButton} ${styles.registered}`}
                   disabled
                 >
@@ -147,7 +143,7 @@ const EventCard = ({ event, isRegistered, onRegister, onViewDetails }) => {
                 </button>
               )
             ) : (
-              <button 
+              <button
                 className={`${styles.registerButton} ${styles.closed}`}
                 disabled
               >

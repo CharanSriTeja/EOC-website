@@ -448,15 +448,14 @@ function EOCLandingPage() {
                 <div className={styles.logo}>
                   <div className={styles.logoBlur}></div>
                   <div className={styles.logoIconWrapper}>
-                    <Code className={styles.logoIcon} />
-                  </div>
-                </div>
-                <div>
-                  <img 
+                    <img 
                     src="https://res.cloudinary.com/dxpzm7irj/image/upload/v1761391988/EOC_logo_gbuw9j.jpg" 
                     alt="EOC Logo" 
                     className={styles.logoImage}
                   />
+                  </div>
+                </div>
+                <div>
                   <p className={styles.logoSubtext}>Event Organizing Cell</p>
                 </div>
               </div>

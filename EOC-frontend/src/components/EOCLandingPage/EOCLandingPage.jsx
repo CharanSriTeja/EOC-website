@@ -452,7 +452,11 @@ function EOCLandingPage() {
                   </div>
                 </div>
                 <div>
-                  <span className={styles.logoText}>EOC</span>
+                  <img 
+                    src="https://res.cloudinary.com/dxpzm7irj/image/upload/v1761391988/EOC_logo_gbuw9j.jpg" 
+                    alt="EOC Logo" 
+                    className={styles.logoImage}
+                  />
                   <p className={styles.logoSubtext}>Event Organizing Cell</p>
                 </div>
               </div>
@@ -475,7 +479,7 @@ function EOCLandingPage() {
                 <a href="https://www.linkedin.com/school/srkr-engineering-college/" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Twitter width={24} height={24} /></a>
                 <a href="https://www.linkedin.com/school/srkr-engineering-college/" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Linkedin width={24} height={24} /></a>
                 <a href="https://www.instagram.com/srkr_eoc?igsh=ZDNlc21xbG5kNnJw" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Instagram width={24} height={24} /></a>
-                <a href="mailto:charansritejachilukuri@gmail.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Mail width={24} height={24} /></a>
+                <a href="mailto:eocsrkr@gmail.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}><Mail width={24} height={24} /></a>
               </div>
             </div>
           </div>

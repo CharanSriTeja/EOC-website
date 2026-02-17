@@ -30,6 +30,9 @@ app.get('/',(req,res)=>{
     })
 })
 
+app.get('/secret',(req,res)={
+    res.send({"Hi Good Morning Charan 😀"})
+})
 
 app.use('/api/v1/auth',authRoutes)
 app.use('/api/v1/admin', adminRoutes);
